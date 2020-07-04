@@ -8,3 +8,7 @@ v-15.zip
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+#01_migrate:
+ #		command: "django-admin.py migrate"
+ #		leader_only: true
+ #
