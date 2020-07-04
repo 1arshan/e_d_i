@@ -1,4 +1,4 @@
-from celery import shared_task
+"""from celery import shared_task
 from twilio.rest import Client
 from adcbackend.secrets import SmsToken
 from rest_framework.response import Response
@@ -38,3 +38,4 @@ def send_parallel_mail(subject, content, to_email):
     except Exception as e:
         # print("mail not send")
         print(e)
+"""
