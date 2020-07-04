@@ -37,7 +37,7 @@ class VideoMaterial(models.Model):
 
 
 class NotesMaterial(models.Model):
-    notes_link = models.ForeignKey(VideoMaterial, on_delete=models.CASCADE)
+    notes_link = models.ForeignKey(VideoMaterial, on_delete=models.CASCADE,related_name='notes_material_link')
     notes = models.FileField(upload_to=renaming_uploaded_file1,blank=True)
     question_ans = models.FileField(upload_to=renaming_uploaded_file2, blank=True)
 

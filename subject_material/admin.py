@@ -16,3 +16,5 @@ class VideoMaterial(admin.ModelAdmin):
     inlines = [
         NotesInLine
     ]
+
+admin.site.register(NotesMaterial)
