@@ -1,6 +1,6 @@
 venv
 v-1.zip
-adcbackend/secrets.py
+#adcbackend/secrets.py
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
