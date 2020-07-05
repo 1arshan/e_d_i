@@ -12,5 +12,5 @@ class TempStudentSerializer(serializers.ModelSerializer):
 class TempTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = TempTeacher
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password', 'subject'
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password'
             , 'description']

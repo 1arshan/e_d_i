@@ -49,7 +49,7 @@ class StudentVerifyOtpView(APIView):
         data_receive = request.data
         data = TempStudent.objects.get(phone_number=data_receive['phone_number'])
         diff = datetime.now(timezone.utc) - data.date
-        if diff.seconds < 50:
+        if diff.seconds < 500:
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.create_user(username=data.phone_number, email=data.email,
@@ -127,7 +127,7 @@ class TeacherVerifyOtpView(APIView):
                     return Response("phone number or email enter already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
                 TeacherProfile.objects.create(teacher_description=data.description, user=user
-                                              , subject=data.subject, phone_number=data.phone_number,
+                                              ,  phone_number=data.phone_number,
                                               email=data.email, last_name=data.last_name,
                                               first_name=data.first_name)
 

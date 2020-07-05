@@ -22,7 +22,7 @@ class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
-    subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
+    #subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     email = models.EmailField(unique=True, blank=True)
@@ -53,4 +53,7 @@ class TempTeacher(models.Model):
     password = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
-    subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
+    #subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
+
+class TeacherSubject(models.Model):
+    teacher_link =models.ForeignKey(TempTeacher,on_delete=models.CASCADE)
