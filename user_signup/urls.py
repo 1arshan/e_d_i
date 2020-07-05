@@ -9,6 +9,7 @@ urlpatterns = [
     path('<str:ph_no>/resend/t/', views.TempTeacherView.as_view(), name='t_resend'),
     path('phone_number/verify/s/', views.StudentVerifyOtpView.as_view(), name='s_verify'),
     path('phone_number/verify/t/', views.TeacherVerifyOtpView.as_view(), name='t_verify'),
+    #path('login', views.LoginView.as_view(), name='login'),
     #path('password_reset/<str:medium>/', views2.PasswordResetView.as_view()),
     #path('otp/login/', views2.otp_login_view,name='otplogin'),
     #path('password_reset/otp/verify/', views2.PasswordResetOtpVerifyView.as_view(), name='otpverify'),

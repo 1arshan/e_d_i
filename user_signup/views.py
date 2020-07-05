@@ -56,7 +56,7 @@ class StudentVerifyOtpView(APIView):
                                                     password=data.password, first_name=data.first_name,
                                                     last_name=data.last_name)
                 except Exception as e:
-                    return Response("phone number or email enter already exist",
+                    return Response("phone number enter already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
                 StudentProfile.objects.create(standard_or_class=data.standard_or_class, user=user,
                                               pincode=data.pincode, phone_number=data.phone_number,
@@ -75,8 +75,8 @@ class StudentVerifyOtpView(APIView):
                     'mail_otp': mail_otp
                 }
                 return Response(x, status=status.HTTP_202_ACCEPTED)
-            return Response("OTP incorrect", status=status.HTTP_200_OK)
-        return Response("OTP expire", status=status.HTTP_200_OK)
+            return Response("otp incorrect", status=status.HTTP_200_OK)
+        return Response("otp expire", status=status.HTTP_200_OK)
 
 
 # temperory teacher model till phone number verified
@@ -146,3 +146,5 @@ class TeacherVerifyOtpView(APIView):
                 return Response(x, status=status.HTTP_202_ACCEPTED)
             return Response("OTP incorrect", status=status.HTTP_200_OK)
         return Response("OTP expire", status=status.HTTP_200_OK)
+
+#class LoginView()

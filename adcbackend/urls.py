@@ -8,6 +8,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user_signup.urls')),
     path('user_login/', include('user_login.urls')),
+    path('study_material/',include('subject_material.urls')),
+
+    #django inbuild
+    path('api-auth/', include('rest_framework.urls')),
 
     # jwt login
     path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),

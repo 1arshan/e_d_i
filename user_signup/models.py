@@ -54,6 +54,6 @@ class TempTeacher(models.Model):
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
     #subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
-
+"""
 class TeacherSubject(models.Model):
-    teacher_link =models.ForeignKey(TempTeacher,on_delete=models.CASCADE)
+    teacher_link =models.ForeignKey(TempTeacher,on_delete=models.CASCADE)"""
