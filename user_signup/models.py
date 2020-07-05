@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django_better_admin_arrayfield.models.fields import ArrayField
+
 
 
 class StudentProfile(models.Model):
@@ -53,7 +53,8 @@ class TempTeacher(models.Model):
     password = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
-    #subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
+
+   #subject = ArrayField(models.CharField(max_length=50, blank=True), blank=True, null=True)
 """
 class TeacherSubject(models.Model):
     teacher_link =models.ForeignKey(TempTeacher,on_delete=models.CASCADE)"""
