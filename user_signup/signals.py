@@ -10,7 +10,7 @@ def teacher_otp(sender, instance, **kwargs):
     instance.otp = random.randrange(10101, 909090)
     print("abc")
     content = "verification code is: " + str(instance.otp) + "\nthis code will valid for only 45 secs"
-    #send_parallel_sms.delay(instance.phone_number, content)
+    send_parallel_sms.delay(instance.phone_number, content)
 
 
 @receiver(pre_save, sender=TempStudent)

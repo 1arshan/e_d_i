@@ -1,5 +1,5 @@
 venv
-v-25.zip
+v-26.zip
 v-14.zip
 v-15.zip
 #imp
@@ -12,3 +12,6 @@ v-15.zip
  #		command: "django-admin.py migrate"
  #		leader_only: true
  #
+#option_settings:
+ # aws:elasticbeanstalk:container:python:
+ # DJANGO_SETTINGS_MODULE: adcbackend.settings
