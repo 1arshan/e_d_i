@@ -159,19 +159,19 @@ class TeacherVerifyOtpView(APIView):
 
 class StudetProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = StudentSerializer
-    lookup_url_kwarg = 's'
+    lookup_url_kwarg = 'pk'
     lookup_field = 'phone_number'
 
     def get_queryset(self):
-        self.kwargs['s'] = self.request.user.username
+        self.kwargs['pk'] = self.request.user.username
         return StudentProfile.objects.all()
 
 
 class TeacherProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = TeacherProfile
-    lookup_url_kwarg = 't'
+    lookup_url_kwarg = 'pk'
     lookup_field = 'phone_number'
 
     def get_queryset(self):
-        self.kwargs['t'] = self.request.user.username
+        self.kwargs['pk'] = self.request.user.username
         return TeacherProfile.objects.all()
