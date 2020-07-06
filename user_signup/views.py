@@ -57,12 +57,17 @@ class StudentVerifyOtpView(APIView):
                                                     password=data.password, first_name=data.first_name,
                                                     last_name=data.last_name)
                 except Exception as e:
+                    return Response("user with this phone number already exist",
+                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+                try:
+
+                    StudentProfile.objects.create(standard_or_class=data.standard_or_class, user=user,
+                                                  pincode=data.pincode, phone_number=data.phone_number,
+                                                  email=data.email, last_name=data.last_name
+                                                  , first_name=data.first_name)
+                except Exception as e:
                     return Response("phone number enter already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
-                StudentProfile.objects.create(standard_or_class=data.standard_or_class, user=user,
-                                              pincode=data.pincode, phone_number=data.phone_number,
-                                              email=data.email, last_name=data.last_name
-                                              , first_name=data.first_name)
                 data.delete()
                 login(request, user)
                 if user.email:
