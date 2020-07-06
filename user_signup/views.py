@@ -2,13 +2,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from .models import TempStudent, StudentProfile, TempTeacher, TeacherProfile
-from .serializers import TempStudentSerializer, TempTeacherSerializer
+from .serializers import TempStudentSerializer, TempTeacherSerializer, StudentSerializer, TeacherSerializer
 from datetime import datetime, timezone
-from django.core import exceptions
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from broadcaster.mail import MailVerification
 from django.contrib.auth import login
+from django.core import exceptions
+from rest_framework import generics
 
 
 # temperory student model till phone number verified
@@ -49,7 +50,7 @@ class StudentVerifyOtpView(APIView):
         data_receive = request.data
         data = TempStudent.objects.get(phone_number=data_receive['phone_number'])
         diff = datetime.now(timezone.utc) - data.date
-        if diff.seconds < 500:
+        if diff.seconds < 50:
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.create_user(username=data.phone_number, email=data.email,
@@ -117,19 +118,27 @@ class TeacherVerifyOtpView(APIView):
         data_receive = request.data
         data = TempTeacher.objects.get(phone_number=data_receive['phone_number'])
         diff = datetime.now(timezone.utc) - data.date
-        if diff.seconds < 5000:
+        if diff.seconds < 50:
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.create_user(username=data.phone_number, email=data.email,
                                                     password=data.password, first_name=data.first_name,
                                                     last_name=data.last_name)
+
+
                 except Exception as e:
-                    return Response("phone number or email enter already exist",
+                    return Response("user with this phone number already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
-                TeacherProfile.objects.create(teacher_description=data.description, user=user
-                                              ,  phone_number=data.phone_number,
-                                              email=data.email, last_name=data.last_name,
-                                              first_name=data.first_name)
+
+                try:
+                    TeacherProfile.objects.create(teacher_description=data.description, user=user
+                                                  , phone_number=data.phone_number,
+                                                  email=data.email, last_name=data.last_name,
+                                                  first_name=data.first_name)
+
+                except Exception as e:
+                    return Response("user with this email already exist",
+                                    status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 data.delete()
                 login(request, user)
@@ -147,4 +156,22 @@ class TeacherVerifyOtpView(APIView):
             return Response("OTP incorrect", status=status.HTTP_200_OK)
         return Response("OTP expire", status=status.HTTP_200_OK)
 
-#class LoginView()
+
+class StudetProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = StudentSerializer
+    lookup_url_kwarg = 's'
+    lookup_field = 'phone_number'
+
+    def get_queryset(self):
+        self.kwargs['s'] = self.request.user.username
+        return StudentProfile.objects.all()
+
+
+class TeacherProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = TeacherProfile
+    lookup_url_kwarg = 't'
+    lookup_field = 'phone_number'
+
+    def get_queryset(self):
+        self.kwargs['t'] = self.request.user.username
+        return TeacherProfile.objects.all()

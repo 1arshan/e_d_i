@@ -1,4 +1,4 @@
-from .models import TempStudent, TempTeacher
+from .models import TempStudent, TempTeacher, StudentProfile, TeacherProfile
 from rest_framework import serializers
 
 
@@ -14,3 +14,17 @@ class TempTeacherSerializer(serializers.ModelSerializer):
         model = TempTeacher
         fields = ['first_name', 'last_name', 'email', 'phone_number', 'password'
             , 'description']
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentProfile
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'standard_or_class'
+            , 'pincode','email_verified']
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeacherProfile
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'teacher_description'
+            , 'email_verified']
