@@ -68,11 +68,11 @@ class StudentVerifyOtpView(APIView):
                 except Exception as e:
                     return Response("phone number enter already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
-                #data.delete()
+                data.delete()
                 login(request, user)
                 if user.email:
-                    current_site = get_current_site(request)
-                    MailVerification(user, current_site)
+                    #current_site = get_current_site(request)
+                    #MailVerification(user, current_site)
                     mail_otp = "please verify your mail also"
                 else:
                     mail_otp = "it will be better if you also provide us your email address"
@@ -80,7 +80,7 @@ class StudentVerifyOtpView(APIView):
                     'msg': "otp verififed, Account actiuated",
                     'mail_otp': mail_otp
                 }
-                return Response(x, status=status.HTTP_202_ACCEPTED)
+                return Response("x", status=status.HTTP_202_ACCEPTED)
             return Response("otp incorrect", status=status.HTTP_200_OK)
         return Response("otp expire", status=status.HTTP_200_OK)
 
@@ -148,8 +148,8 @@ class TeacherVerifyOtpView(APIView):
                 data.delete()
                 login(request, user)
                 if user.email:
-                    current_site = get_current_site(request)
-                    MailVerification(user, current_site)
+                    #current_site = get_current_site(request)
+                    #MailVerification(user, current_site)
                     mail_otp = "please verify your mail also"
                 else:
                     mail_otp = "it will be better if you also provide us your email address"
