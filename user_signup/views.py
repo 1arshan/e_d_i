@@ -10,11 +10,11 @@ from broadcaster.mail import MailVerification
 from django.contrib.auth import login
 from django.core import exceptions
 from rest_framework import generics
-
+from rest_framework.permissions import IsAuthenticated
 
 # temperory student model till phone number verified
 class TempStudentView(APIView):
-
+    permission_classes = []
     def post(self, request):
         data = request.data
         try:
@@ -46,6 +46,7 @@ class TempStudentView(APIView):
 # do tranfering data and deleting in parallelism
 # otp verify and tranfers user data,email verification if provided
 class StudentVerifyOtpView(APIView):
+    permission_classes = []
     def post(self, request):
         data_receive = request.data
         data = TempStudent.objects.get(phone_number=data_receive['phone_number'])
@@ -87,7 +88,7 @@ class StudentVerifyOtpView(APIView):
 
 # temperory teacher model till phone number verified
 class TempTeacherView(APIView):
-
+    permission_classes = []
     def post(self, request):
         data = request.data
         try:
@@ -119,6 +120,7 @@ class TempTeacherView(APIView):
 # do tranfering data and deleting in parallelism
 # otp verify and tranfers user data,email verification if provided
 class TeacherVerifyOtpView(APIView):
+    permission_classes = []
     def post(self, request):
         data_receive = request.data
         data = TempTeacher.objects.get(phone_number=data_receive['phone_number'])
@@ -142,6 +144,7 @@ class TeacherVerifyOtpView(APIView):
                                                   first_name=data.first_name)
 
                 except Exception as e:
+                    user.delete()
                     return Response("user with this email already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -163,6 +166,7 @@ class TeacherVerifyOtpView(APIView):
 
 
 class StudetProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = []
     serializer_class = StudentSerializer
     lookup_url_kwarg = 'pk'
     lookup_field = 'phone_number'
@@ -173,10 +177,11 @@ class StudetProfileView(generics.RetrieveUpdateAPIView):
 
 
 class TeacherProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = TeacherProfile
+    serializer_class = TeacherSerializer
     lookup_url_kwarg = 'pk'
     lookup_field = 'phone_number'
 
     def get_queryset(self):
         self.kwargs['pk'] = self.request.user.username
+        print(self.kwargs['pk'])
         return TeacherProfile.objects.all()
