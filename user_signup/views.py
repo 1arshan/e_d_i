@@ -11,10 +11,13 @@ from django.contrib.auth import login
 from django.core import exceptions
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from adcbackend.token import get_tokens_for_user
+
 
 # temperory student model till phone number verified
 class TempStudentView(APIView):
     permission_classes = []
+
     def post(self, request):
         data = request.data
         try:
@@ -47,6 +50,7 @@ class TempStudentView(APIView):
 # otp verify and tranfers user data,email verification if provided
 class StudentVerifyOtpView(APIView):
     permission_classes = []
+
     def post(self, request):
         data_receive = request.data
         data = TempStudent.objects.get(phone_number=data_receive['phone_number'])
@@ -70,18 +74,17 @@ class StudentVerifyOtpView(APIView):
                     return Response("phone number enter already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
                 data.delete()
-                login(request, user)
                 if user.email:
-                    #current_site = get_current_site(request)
-                    #MailVerification(user, current_site)
+                    # current_site = get_current_site(request)
+                    # MailVerification(user, current_site)
                     mail_otp = "please verify your mail also"
                 else:
                     mail_otp = "it will be better if you also provide us your email address"
-                x = {
-                    'msg': "otp verififed, Account actiuated",
-                    'mail_otp': mail_otp
-                }
-                return Response("x", status=status.HTTP_202_ACCEPTED)
+
+                x = get_tokens_for_user(user)
+                x["message"] = "otp verififed, Account actiuated"
+                x['mail'] = mail_otp
+                return Response(x, status=status.HTTP_202_ACCEPTED)
             return Response("otp incorrect", status=status.HTTP_200_OK)
         return Response("otp expire", status=status.HTTP_200_OK)
 
@@ -89,6 +92,7 @@ class StudentVerifyOtpView(APIView):
 # temperory teacher model till phone number verified
 class TempTeacherView(APIView):
     permission_classes = []
+
     def post(self, request):
         data = request.data
         try:
@@ -121,11 +125,12 @@ class TempTeacherView(APIView):
 # otp verify and tranfers user data,email verification if provided
 class TeacherVerifyOtpView(APIView):
     permission_classes = []
+
     def post(self, request):
         data_receive = request.data
         data = TempTeacher.objects.get(phone_number=data_receive['phone_number'])
         diff = datetime.now(timezone.utc) - data.date
-        if diff.seconds < 50:
+        if diff.seconds < 500:
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.create_user(username=data.phone_number, email=data.email,
@@ -151,38 +156,48 @@ class TeacherVerifyOtpView(APIView):
                 data.delete()
                 login(request, user)
                 if user.email:
-                    #current_site = get_current_site(request)
-                    #MailVerification(user, current_site)
+                    # current_site = get_current_site(request)
+                    # MailVerification(user, current_site)
                     mail_otp = "please verify your mail also"
                 else:
                     mail_otp = "it will be better if you also provide us your email address"
-                x = {
-                    'msg': "otp verififed, Account actiuated",
-                    'mail_otp': mail_otp
-                }
+
+                x = get_tokens_for_user(user)
+                x["message"] = "otp verififed, Account actiuated"
+                x['mail'] = mail_otp
                 return Response(x, status=status.HTTP_202_ACCEPTED)
             return Response("OTP incorrect", status=status.HTTP_200_OK)
         return Response("OTP expire", status=status.HTTP_200_OK)
 
 
-class StudetProfileView(generics.ListAPIView):
+class StudetProfileView(APIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = StudentSerializer
-    #lookup_url_kwarg = 'pk'
-    #lookup_field = 'phone_number'
 
-    def get_queryset(self):
-        print( self.request.user.username)
-        #self.kwargs['pk'] = self.request.user.username
-        return StudentProfile.objects.filter(phone_number=self.request.user.username)
+    def get(self, request):
+        user = self.request.user.username
+        print(user)
+        serializer = StudentSerializer(StudentProfile.objects.get(phone_number=self.request.user.username))
+        return Response(serializer.data)
 
 
-class TeacherProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = TeacherSerializer
-    lookup_url_kwarg = 'pk'
-    lookup_field = 'phone_number'
+"""    def post(self, request):
+        user = self.request.user
+        username = user.username
+        # teacher_name = TeacherProfile.objects.get(user=user)
+        serializer = TeacherUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.validated_data['teacher_name'] = user.first_name + user.last_name
+            serializer.validated_data['teacher_link'] = username
+            serializer.save()
+            return Response("save", status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+"""
 
-    def get_queryset(self):
-        self.kwargs['pk'] = self.request.user.username
-        print(self.kwargs['pk'])
-        return TeacherProfile.objects.all()
+
+class TeacherProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = self.request.user.username
+        serializer = TeacherSerializer(TeacherProfile.objects.get(phone_number=self.request.user.username))
+        return Response(serializer.data)

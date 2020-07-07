@@ -1,5 +1,6 @@
 from django.db import models
 from user_signup.models import TeacherProfile
+from rest_framework_simplejwt import settings
 
 
 class Subject(models.Model):
@@ -30,15 +31,14 @@ class VideoMaterial(models.Model):
     topic = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     video_link = models.URLField(blank=True)
-    teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE)
-   # teacher_name =models.CharField(max_length=50,default='Anonymous')
+    teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE, to_field='phone_number')
+    teacher_name = models.CharField(max_length=50, default='Anonymous')
 
     def __str__(self):
         return f'Topic: {self.topic}; Description: {self.description} '
 
 
 class NotesMaterial(models.Model):
-    notes_link = models.ForeignKey(VideoMaterial, on_delete=models.CASCADE,related_name='notes_material_link')
-    notes = models.FileField(upload_to=renaming_uploaded_file1,blank=True)
+    notes_link = models.ForeignKey(VideoMaterial, on_delete=models.CASCADE, related_name='notes_material_link')
+    notes = models.FileField(upload_to=renaming_uploaded_file1, blank=True)
     question_ans = models.FileField(upload_to=renaming_uploaded_file2, blank=True)
-

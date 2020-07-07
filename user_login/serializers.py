@@ -14,7 +14,7 @@ class StudentHomePageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoMaterial
         fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
-                  'notes_material_link','teacher_link']
+                  'notes_material_link', 'teacher_name','teacher_link']
 
     def create(self, validated_data):
         notes_material_data = validated_data.pop('notes_material_link')
