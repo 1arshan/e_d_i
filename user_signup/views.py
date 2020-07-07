@@ -165,15 +165,16 @@ class TeacherVerifyOtpView(APIView):
         return Response("OTP expire", status=status.HTTP_200_OK)
 
 
-class StudetProfileView(generics.RetrieveUpdateAPIView):
-    permission_classes = []
+class StudetProfileView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = StudentSerializer
-    lookup_url_kwarg = 'pk'
-    lookup_field = 'phone_number'
+    #lookup_url_kwarg = 'pk'
+    #lookup_field = 'phone_number'
 
     def get_queryset(self):
-        self.kwargs['pk'] = self.request.user.username
-        return StudentProfile.objects.all()
+        print( self.request.user.username)
+        #self.kwargs['pk'] = self.request.user.username
+        return StudentProfile.objects.filter(phone_number=self.request.user.username)
 
 
 class TeacherProfileView(generics.RetrieveUpdateAPIView):
