@@ -170,34 +170,27 @@ class TeacherVerifyOtpView(APIView):
         return Response("OTP expire", status=status.HTTP_200_OK)
 
 
+# --student profile view and change,user model has not change-->>>
 class StudetProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = self.request.user.username
-        print(user)
         serializer = StudentSerializer(StudentProfile.objects.get(phone_number=self.request.user.username))
         return Response(serializer.data)
 
-
-"""    def post(self, request):
-        user = self.request.user
-        username = user.username
-        # teacher_name = TeacherProfile.objects.get(user=user)
-        serializer = TeacherUploadSerializer(data=request.data)
+    def put(self, request):
+        user = self.request.user.username
+        t = StudentProfile.objects.get(phone_number=user)
+        serializer = StudentSerializer(t, data=request.data)
         if serializer.is_valid():
-            serializer.validated_data['teacher_name'] = user.first_name + user.last_name
-            serializer.validated_data['teacher_link'] = username
             serializer.save()
-            return Response("save", status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-"""
 
-
+# --student profile view and change,user model has not change-->>>
 class TeacherProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = self.request.user.username
         serializer = TeacherSerializer(TeacherProfile.objects.get(phone_number=self.request.user.username))
         return Response(serializer.data)

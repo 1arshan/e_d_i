@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from subject_material.models import VideoMaterial, Subject, StandardOrClass, NotesMaterial
 from user_login.serializers import NotesMaterialSerializer
-
+from rest_framework_simplejwt import settings
 
 class TeacherUploadSerializer(serializers.ModelSerializer):
     #notes_material_link = NotesMaterialSerializer(many=True, read_only=True)
