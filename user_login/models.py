@@ -14,13 +14,14 @@ class DoubtsQuestion(models.Model):
 
 
 class DoubtsQuestionPhotos(models.Model):
-    doubts_question_link = models.ForeignKey(DoubtsQuestion, on_delete=models.CASCADE,
-                                             related_name='question_doubts_link')
+    question_link_photos = models.ForeignKey(DoubtsQuestion, on_delete=models.CASCADE,
+                                             related_name='question_photos_link')
     image = models.ImageField(blank=True, upload_to=renaming_uploaded_file1)
 
 
 class QuestionComment(models.Model):
-    comment_question_link = models.ForeignKey(DoubtsQuestion, on_delete=models.CASCADE)
+    question_link_comment = models.ForeignKey(DoubtsQuestion, on_delete=models.CASCADE,
+                                              related_name='question_comment_link')
     comment = models.CharField(max_length=256)
 
 

@@ -18,3 +18,4 @@ class TeacherUploadSerializer(serializers.ModelSerializer):
         for x in notes_material_data:
             NotesMaterial.objects.create(notes_link=temp, **x)
         return temp
+

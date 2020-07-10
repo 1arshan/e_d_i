@@ -19,6 +19,6 @@ class StudentProfileInline(admin.ModelAdmin):
 
 
 @admin.register(TeacherProfile)
-class StudentProfileInline(admin.ModelAdmin):
+class TeacherProfileInline(admin.ModelAdmin):
     list_display = ("phone_number", "email", 'first_name', 'last_name')
 

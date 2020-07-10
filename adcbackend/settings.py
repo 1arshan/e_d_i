@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'broadcaster',
     'subject_material',
     'user_login',
+    'administration',
 
 ]
 

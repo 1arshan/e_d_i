@@ -1,15 +1,8 @@
 from .models import VideoMaterial
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-import random
-#from .tasks import send_parallel_sms
 
-"""
+
 @receiver(pre_save, sender=VideoMaterial)
-def teacher_otp(sender, instance, **kwargs):
-    #instance.otp = random.randrange(10101, 909090)
-    #print("abc")
-    #content = "verification code is: " + str(instance.otp) + "\nthis code will valid for only 45 secs"
-    #send_parallel_sms.delay(instance.phone_number, content)
-
-"""
+def add_teacher_name(sender, instance, **kwargs):
+    instance.teacher_name =instance.teacher_link.first_name + " " + instance.teacher_link.last_name

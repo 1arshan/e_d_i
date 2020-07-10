@@ -192,7 +192,7 @@ class StudetProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# --student profile view and change,user model has not change-->>>
+# --techer profile view and change,user model has not change-->>>
 class TeacherProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
