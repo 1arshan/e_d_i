@@ -35,7 +35,7 @@ class TempStudent(models.Model):
     first_name = models.CharField(max_length=12)
     last_name = models.CharField(max_length=12)
     phone_number = models.CharField(max_length=13, unique=True)
-    email = models.EmailField(blank=True, unique=True)
+    email = models.EmailField(blank=True)
     pincode = models.CharField(max_length=10)
     standard_or_class = models.CharField(max_length=10)
     password = models.CharField(max_length=30)

@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 
 
 class StudyMaterialUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user = self.request.user.username
         serializer = TeacherUploadSerializer(VideoMaterial.objects.filter(teacher_link=user), many=True)
@@ -18,12 +20,11 @@ class StudyMaterialUploadView(APIView):
 
     def post(self, request):
         user = self.request.user
-        username =user.username
-        #teacher_name = TeacherProfile.objects.get(user=user)
+        teacher_name = TeacherProfile.objects.get(user=user)
         serializer = TeacherUploadSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.validated_data['teacher_name'] = user.first_name + user.last_name
-            serializer.validated_data['teacher_link'] = username
+            serializer.validated_data['teacher_name'] = user.first_name +" "+ user.last_name
+            serializer.validated_data['teacher_link'] = teacher_name
             serializer.save()
             return Response("save", status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

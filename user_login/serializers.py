@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from subject_material.models import VideoMaterial, Subject, StandardOrClass, NotesMaterial
+from subject_material.models import VideoMaterial, NotesMaterial
+from .models import DoubtsQuestion, QuestionComment, DoubtsQuestionPhotos, \
+    DoubtsAnswer, DoubtsAnswerPhotos, AnswerComment
 
 
 class NotesMaterialSerializer(serializers.ModelSerializer):
@@ -14,7 +16,7 @@ class StudentHomePageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoMaterial
         fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
-                  'notes_material_link', 'teacher_name','teacher_link']
+                  'notes_material_link', 'teacher_name', 'pk']
 
     def create(self, validated_data):
         notes_material_data = validated_data.pop('notes_material_link')
@@ -24,18 +26,27 @@ class StudentHomePageSerializer(serializers.ModelSerializer):
         return temp
 
 
-"""class FormInfoSerializers(serializers.ModelSerializer):
-    single_ans_ques = SingleAnsQuesSerializer(many=True, read_only=True)
+class DoubtsQuestionPhotosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = FormInfo
-        fields = ['id', 'username_email', 'headline', 'summary',
-                  'single_ans_ques', 'multi_ans_ques', 'file_ques', 'checkbox_ques_ans',
-                  'linear_scale_ans']
-    def create(self, validated_data):
-        single_ans_data = validated_data.pop('single_ans_ques')
-        temp = FormInfo.objects.create(**validated_data)
-        for x in single_ans_data:
-            SingleAnsQues.objects.create(single_ans_ques_link=temp, **x)
+        model = DoubtsQuestionPhotos
+        fields = ['image']
 
-        return temp
-"""
+
+class DoubtsQuestionCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionComment
+        fields = ['comment']
+
+
+# when only question and photo are seen
+class DoubtsQuestionSerializer(serializers.ModelSerializer):
+    question_doubts_link = DoubtsQuestionPhotosSerializer(many=True)
+
+    class Meta:
+        model = DoubtsQuestion
+        fields = ['question_doubts_link', 'material_link', 'doubts_question', 'pk']
+
+
+# question along with photo,anser .comment are seen
+class DoubtsQuestionAnswerSerializer(serializers.ModelSerializer):
+    question_doubts_link = DoubtsQuestionPhotosSerializer(many=True)

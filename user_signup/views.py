@@ -82,7 +82,7 @@ class StudentVerifyOtpView(APIView):
                     mail_otp = "it will be better if you also provide us your email address"
 
                 x = get_tokens_for_user(user)
-                x["message"] = "otp verififed, Account actiuated"
+                x["msg"] = "otp verififed, Account actiuated"
                 x['mail'] = mail_otp
                 return Response(x, status=status.HTTP_202_ACCEPTED)
             return Response("otp incorrect", status=status.HTTP_200_OK)
@@ -163,7 +163,7 @@ class TeacherVerifyOtpView(APIView):
                     mail_otp = "it will be better if you also provide us your email address"
 
                 x = get_tokens_for_user(user)
-                x["message"] = "otp verififed, Account actiuated"
+                x["msg"] = "otp verififed, Account actiuated"
                 x['mail'] = mail_otp
                 return Response(x, status=status.HTTP_202_ACCEPTED)
             return Response("OTP incorrect", status=status.HTTP_200_OK)
@@ -184,8 +184,13 @@ class StudetProfileView(APIView):
         serializer = StudentSerializer(t, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            u = User.objects.get(username=user)
+            u.first_name = serializer.validated_data['first_name']
+            u.last_name = serializer.validated_data['last_name']
+            u.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # --student profile view and change,user model has not change-->>>
 class TeacherProfileView(APIView):
@@ -194,3 +199,16 @@ class TeacherProfileView(APIView):
     def get(self, request):
         serializer = TeacherSerializer(TeacherProfile.objects.get(phone_number=self.request.user.username))
         return Response(serializer.data)
+
+    def put(self, request):
+        user = self.request.user.username
+        t = TeacherProfile.objects.get(phone_number=user)
+        serializer = TeacherSerializer(t, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            u = User.objects.get(username=user)
+            u.first_name = serializer.validated_data['first_name']
+            u.last_name = serializer.validated_data['last_name']
+            u.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

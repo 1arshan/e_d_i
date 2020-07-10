@@ -35,7 +35,7 @@ class VideoMaterial(models.Model):
     teacher_name = models.CharField(max_length=50, default='Anonymous')
 
     def __str__(self):
-        return f'Topic: {self.topic}; Description: {self.description} '
+        return f'Topic: {self.topic}; Subject: {self.subject_link}; Class: {self.standard_link} '
 
 
 class NotesMaterial(models.Model):
