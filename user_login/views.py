@@ -13,7 +13,21 @@ class StudentHomePageView(generics.ListAPIView):
 
     def get_queryset(self):
         return VideoMaterial.objects.filter(standard_link=StudentProfile.objects.get
-        (user=self.request.user).standard_or_class)
+        (user=self.request.user).standard_or_class)[:10]
+
+
+class StudentQuerryView(generics.ListAPIView):
+    serializer_class = StudentHomePageSerializer
+
+    def get_queryset(self):
+        data = self.request.data
+        standard_link = StudentProfile.objects.get(user=self.request.user).standard_or_class
+        subject = data['subject']
+        if data['topic']:
+            topic = data['topic']
+            return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject, topic__iexact=topic)
+
+        return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject)
 
 
 # ----Doubts quesiton section, specific to video material--->

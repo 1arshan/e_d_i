@@ -6,7 +6,6 @@ from .serializers import TempStudentSerializer, TempTeacherSerializer, StudentSe
 from datetime import datetime, timezone
 from django.contrib.auth.models import User
 from broadcaster.mail import MailVerification
-from django.contrib.auth import login
 from django.core import exceptions
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
@@ -41,7 +40,8 @@ class TempStudentView(APIView):
         try:
             data = TempStudent.objects.get(phone_number=ph_no)
         except exceptions.ObjectDoesNotExist:
-            return Response("This phone number does not exist", status=status.HTTP_400_BAD_REQUEST)
+            y = {"msg": "This phone number does not exist"}
+            return Response(y, status=status.HTTP_400_BAD_REQUEST)
         diff = datetime.now(timezone.utc) - data.date
         if diff.seconds > 20:
             data.otp = "1234"  # just a type of signal
@@ -69,8 +69,8 @@ class StudentVerifyOtpView(APIView):
                                                     password=data.password, first_name=data.first_name,
                                                     last_name=data.last_name)
                 except Exception as e:
-                    return Response("user with this phone number already exist",
-                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+                    y = {"msg": "user with this phone number already exist"}
+                    return Response(y,status=status.HTTP_406_NOT_ACCEPTABLE)
                 try:
 
                     StudentProfile.objects.create(standard_or_class=data.standard_or_class, user=user,
@@ -79,8 +79,8 @@ class StudentVerifyOtpView(APIView):
                                                   , first_name=data.first_name)
                 except Exception as e:
                     user.delete()
-                    return Response("phone number enter already exist",
-                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+                    y = {"msg": "phone number enter already exist"}
+                    return Response(y,status=status.HTTP_406_NOT_ACCEPTABLE)
                 data.delete()
                 if user.email:
                     MailVerification(user, type='s')
