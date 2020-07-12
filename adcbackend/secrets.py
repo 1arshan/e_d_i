@@ -12,7 +12,7 @@ class DatabaseSecret:
 
 
 class SmsToken:
-    secret_key = "0a5cff8944545d919a3ba5f3a38be391"
+    secret_key = "564bdadba4cf636cb6b97d98551cd410"
     sid_key = "AC7be6ab07022a5265bc79d0ae59d188f2"
     phone_number = "+12056971226"
 

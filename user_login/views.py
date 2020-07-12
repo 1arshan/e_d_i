@@ -5,7 +5,8 @@ from user_signup.models import StudentProfile
 from rest_framework.permissions import IsAuthenticated
 from .models import DoubtsQuestion
 
-#----home page of student will onlt see video available---->>
+
+# ----home page of student will onlt see video available---->>
 class StudentHomePageView(generics.ListAPIView):
     serializer_class = StudentHomePageSerializer
     permission_classes = [IsAuthenticated]
@@ -15,8 +16,8 @@ class StudentHomePageView(generics.ListAPIView):
         (user=self.request.user).standard_or_class)
 
 
-#----Doubts quesiton section, specific to question--->
-class DoubtsQuestionView(generics.ListAPIView):
+# ----Doubts quesiton section, specific to video material--->
+class DoubtsQuestionView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     lookup_url_kwarg = 'pk'
     lookup_field = 'material_link'
@@ -25,3 +26,19 @@ class DoubtsQuestionView(generics.ListAPIView):
     def get_queryset(self):
         return DoubtsQuestion.objects.filter(material_link=self.kwargs['pk'])
 
+
+# -----view all question that teacher ians------>>>>>
+class QuesToBeAnsView(generics.ListAPIView):
+    serializer_class = DoubtsQuestionSerializer
+
+    def get_queryset(self):
+        user = self.request.user.username
+        return DoubtsQuestion.objects.filter(teacher_link=user, is_answered=False)
+
+
+class QuesWhichIsAnsView(generics.ListAPIView):
+    serializer_class = DoubtsQuestionSerializer
+
+    def get_queryset(self):
+        user = self.request.user.username
+        return DoubtsQuestion.objects.filter(teacher_link=user, is_answered=True)

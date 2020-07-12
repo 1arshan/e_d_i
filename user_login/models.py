@@ -1,5 +1,6 @@
 from django.db import models
 from subject_material.models import VideoMaterial
+from user_signup.models import TeacherProfile
 
 
 # ------------doubts question ------->>>>>>>
@@ -9,8 +10,12 @@ def renaming_uploaded_file1(instance, filename):
 
 class DoubtsQuestion(models.Model):
     material_link = models.ForeignKey(VideoMaterial, on_delete=models.CASCADE)
+    teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE, blank=True)
     doubts_question = models.TextField()
     is_answered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.doubts_question}'
 
 
 class DoubtsQuestionPhotos(models.Model):

@@ -48,7 +48,7 @@ class TempTeacher(models.Model):
     first_name = models.CharField(max_length=12)
     last_name = models.CharField(max_length=12)
     phone_number = models.CharField(max_length=13, unique=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     description = models.TextField(blank=True)
     password = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now=True)

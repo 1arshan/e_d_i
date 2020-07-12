@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('upload/', views.StudyMaterialUploadView.as_view(), name='upload/t_homepage'),
 
+
 ]

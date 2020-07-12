@@ -5,13 +5,16 @@ from .models import TempStudent, StudentProfile, TempTeacher, TeacherProfile
 from .serializers import TempStudentSerializer, TempTeacherSerializer, StudentSerializer, TeacherSerializer
 from datetime import datetime, timezone
 from django.contrib.auth.models import User
-from django.contrib.sites.shortcuts import get_current_site
 from broadcaster.mail import MailVerification
 from django.contrib.auth import login
 from django.core import exceptions
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from adcbackend.token import get_tokens_for_user
+from adcbackend.token import get_tokens_for_user, account_activation_token
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode
+from django.http import HttpResponse
+from django.contrib.auth.models import Group
 
 
 # temperory student model till phone number verified
@@ -29,8 +32,10 @@ class TempStudentView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response("otp sent", status=status.HTTP_201_CREATED)
-        return Response("something went wrong please retry", status=status.HTTP_400_BAD_REQUEST)
+            x = {"msg": "otp sent"}
+            return Response(x, status=status.HTTP_201_CREATED)
+        x = {"msg": "something went wrong please retry"}
+        return Response(x, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, ph_no):
         try:
@@ -41,9 +46,11 @@ class TempStudentView(APIView):
         if diff.seconds > 20:
             data.otp = "1234"  # just a type of signal
             data.save()
-            return Response("resend", status=status.HTTP_202_ACCEPTED)
+            x = {"msg": "resend"}
+            return Response(x, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response("wait", status=status.HTTP_200_OK)
+            x = {"msg": "wait"}
+            return Response(x, status=status.HTTP_200_OK)
 
 
 # do tranfering data and deleting in parallelism
@@ -71,12 +78,12 @@ class StudentVerifyOtpView(APIView):
                                                   email=data.email, last_name=data.last_name
                                                   , first_name=data.first_name)
                 except Exception as e:
+                    user.delete()
                     return Response("phone number enter already exist",
                                     status=status.HTTP_406_NOT_ACCEPTABLE)
                 data.delete()
                 if user.email:
-                    # current_site = get_current_site(request)
-                    # MailVerification(user, current_site)
+                    MailVerification(user, type='s')
                     mail_otp = "please verify your mail also"
                 else:
                     mail_otp = "it will be better if you also provide us your email address"
@@ -85,8 +92,10 @@ class StudentVerifyOtpView(APIView):
                 x["msg"] = "otp verififed, Account actiuated"
                 x['mail'] = mail_otp
                 return Response(x, status=status.HTTP_202_ACCEPTED)
-            return Response("otp incorrect", status=status.HTTP_200_OK)
-        return Response("otp expire", status=status.HTTP_200_OK)
+            y = {"msg": 'otp incorrect'}
+            return Response(y, status=status.HTTP_200_OK)
+        y = {"msg": "otp expire"}
+        return Response(y, status=status.HTTP_200_OK)
 
 
 # temperory teacher model till phone number verified
@@ -104,21 +113,26 @@ class TempTeacherView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response("otp sent", status=status.HTTP_201_CREATED)
-        return Response("something went wrong please retry", status=status.HTTP_400_BAD_REQUEST)
+            x = {"msg": "otp sent"}
+            return Response(x, status=status.HTTP_201_CREATED)
+        x = {"msg": "something went wrong please retry"}
+        return Response(x, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, ph_no):
         try:
             data = TempTeacher.objects.get(phone_number=ph_no)
         except exceptions.ObjectDoesNotExist:
-            return Response("This phone number does not exist", status=status.HTTP_400_BAD_REQUEST)
+            x = {"msg": "This phone number does not exist"}
+            return Response(x, status=status.HTTP_400_BAD_REQUEST)
         diff = datetime.now(timezone.utc) - data.date
         if diff.seconds > 20:
             data.otp = "1234"  # just a type of signal
             data.save()
-            return Response("resend", status=status.HTTP_202_ACCEPTED)
+            x = {"msg": "resend"}
+            return Response(x, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response("wait", status=status.HTTP_200_OK)
+            x = {"msg": "wait"}
+            return Response(x, status=status.HTTP_200_OK)
 
 
 # do tranfering data and deleting in parallelism
@@ -137,10 +151,9 @@ class TeacherVerifyOtpView(APIView):
                                                     password=data.password, first_name=data.first_name,
                                                     last_name=data.last_name)
 
-
                 except Exception as e:
-                    return Response("user with this phone number already exist",
-                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+                    x = {"msg": "user with this phone number already exist"}
+                    return Response(x, status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 try:
                     TeacherProfile.objects.create(teacher_description=data.description, user=user
@@ -150,24 +163,30 @@ class TeacherVerifyOtpView(APIView):
 
                 except Exception as e:
                     user.delete()
-                    return Response("user with this email already exist",
-                                    status=status.HTTP_406_NOT_ACCEPTABLE)
+                    x = {"msg": "user with this email already exist"}
+                    return Response(x,status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 data.delete()
-                login(request, user)
+
                 if user.email:
-                    # current_site = get_current_site(request)
-                    # MailVerification(user, current_site)
+                    MailVerification(user, type='t')
                     mail_otp = "please verify your mail also"
                 else:
                     mail_otp = "it will be better if you also provide us your email address"
+
+                my_group = Group.objects.get(name='Teacher')
+                my_group.user_set.add(user)
+                user.is_staff = True
+                user.save()
 
                 x = get_tokens_for_user(user)
                 x["msg"] = "otp verififed, Account actiuated"
                 x['mail'] = mail_otp
                 return Response(x, status=status.HTTP_202_ACCEPTED)
-            return Response("OTP incorrect", status=status.HTTP_200_OK)
-        return Response("OTP expire", status=status.HTTP_200_OK)
+            x = {"msg": "OTP incorrect"}
+            return Response(x, status=status.HTTP_200_OK)
+        x = {"msg": "OTP expire"}
+        return Response(x, status=status.HTTP_200_OK)
 
 
 # --student profile view and change,user model has not change-->>>
@@ -212,3 +231,22 @@ class TeacherProfileView(APIView):
             u.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# do a redirection to login page
+# email verififcation
+def activate_account(request, uidb64, token, type):
+    try:
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
+    if user is not None and account_activation_token.check_token(user, token):
+
+        if type == 't':
+            TeacherProfile.objects.update(user=user, email_verified=True)
+        elif type == 's':
+            StudentProfile.objects.update(user=user, email_verified=True)
+        return HttpResponse('Email_verified', status=status.HTTP_201_CREATED)
+    else:
+        return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)

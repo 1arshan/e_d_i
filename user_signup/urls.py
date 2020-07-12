@@ -15,6 +15,7 @@ urlpatterns = [
     #path('password_reset/<str:medium>/', views2.PasswordResetView.as_view()),
     #path('otp/login/', views2.otp_login_view,name='otplogin'),
     #path('password_reset/otp/verify/', views2.PasswordResetOtpVerifyView.as_view(), name='otpverify'),
+    path('verify_email/<str:uidb64>/<str:token>/<str:type>/',views.activate_account, name='activate')
     #url(r'^verify_email/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
      #   views.activate_account, name='activate'),
     #url(r'^new_password/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',

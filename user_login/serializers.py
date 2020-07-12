@@ -46,10 +46,24 @@ class DoubtsQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DoubtsQuestion
-        fields = ['question_photos_link', 'material_link', 'doubts_question', 'pk', 'question_comment_link']
+        fields = ['question_photos_link', 'material_link', 'doubts_question', 'pk', 'question_comment_link'
+            , 'teacher_link']
+
+
+# -----doubts answer serializer--------->>>>>>>
+class DoubtsAnswerPhotosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoubtsAnswerPhotos
+        fields = ['image']
+
 
 class DoubtsAnswerSerializer(serializers.ModelSerializer):
-    pass
+    answer_doubts_link = DoubtsQuestionPhotosSerializer(many=True)
+
+    class Meta:
+        model = DoubtsAnswer
+        fields = ['answer_question_link', 'doubts_answer','pk'
+            , 'answer_doubts_link']
 
 
 # question along with photo,anser .comment are seen
