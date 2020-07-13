@@ -5,14 +5,14 @@ from django.contrib.auth.models import User
 class StudentProfile(models.Model):
     standard_or_class = models.CharField(max_length=10)
     email_verified = models.BooleanField(default=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     pincode = models.CharField(max_length=12)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     email = models.EmailField(blank=True)
-    phone_number = models.CharField(max_length=13, unique=True)
+    phone_number = models.CharField(max_length=13, unique=True, primary_key=True)
 
 
 class TeacherProfile(models.Model):

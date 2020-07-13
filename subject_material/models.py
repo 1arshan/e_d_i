@@ -22,7 +22,7 @@ def renaming_uploaded_file1(instance, filename):
 
 
 def renaming_uploaded_file2(instance, filename):
-    return "video_material/" + str(instance.notes_link) + "/ques42323" + "_" + str(instance.pk) + "_" + filename
+    return "video_material/" + str(instance.notes_link) + "/ques" + "_" + str(instance.pk) + "_" + filename
 
 
 class VideoMaterial(models.Model):

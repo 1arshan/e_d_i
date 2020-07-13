@@ -1,7 +1,7 @@
 from rest_framework import generics
 from .serializers import *
 from subject_material.models import VideoMaterial
-from user_signup.models import StudentProfile
+from user_signup.models import StudentProfile,TeacherProfile
 from rest_framework.permissions import IsAuthenticated
 from .models import DoubtsQuestion
 
@@ -13,7 +13,7 @@ class StudentHomePageView(generics.ListAPIView):
 
     def get_queryset(self):
         return VideoMaterial.objects.filter(standard_link=StudentProfile.objects.get
-        (user=self.request.user).standard_or_class)[:10]
+        (user=self.request.user).standard_or_class,teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])[:10]
 
 
 class StudentQuerryView(generics.ListAPIView):
@@ -25,9 +25,12 @@ class StudentQuerryView(generics.ListAPIView):
         subject = data['subject']
         if data['topic']:
             topic = data['topic']
-            return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject, topic__iexact=topic)
+            return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject,
+                                                topic__iexact=topic,
+                                                teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])
 
-        return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject)
+        return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject
+                                            ,teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])
 
 
 # ----Doubts quesiton section, specific to video material--->

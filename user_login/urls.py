@@ -10,4 +10,5 @@ urlpatterns = [
     #specific teacher,question whci is not answer
     path('doubts/ans/', views.QuesWhichIsAnsView.as_view(), name='all_ans_doubts'),
     #specific teacher,question which is ans
+    
 ]
