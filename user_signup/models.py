@@ -19,7 +19,7 @@ class StudentProfile(models.Model):
     last_name = models.CharField(max_length=15)
     email = models.EmailField(blank=True)
     phone_number = models.CharField(max_length=13, unique=True, primary_key=True)
-    course_field = models.CharField(max_length=20, blank=True)
+    course_field = models.CharField(max_length=20, blank=True,default='no_field')
 
 
 class TeacherProfile(models.Model):

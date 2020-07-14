@@ -5,7 +5,7 @@ class ProjectSecretKey:
 class DatabaseSecret:
     name = 'test1'
     user = 'arshan'
-    password = 'postgres'
+    password = 'palindrome'
     host = 'localhost'
     port = '5432'
     engine = 'django.db.backends.postgresql_psycopg2'

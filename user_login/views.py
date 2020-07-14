@@ -18,8 +18,7 @@ class StudentHomePageView(generics.ListAPIView):
                                             teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])[:10]
 
 
-# subject_link=Subject.objects.filter(field_name__contains=[t.course_field])[:1],
-
+# toic ,subject ---old version --GET request
 class StudentQuerryView(generics.ListAPIView):
     serializer_class = StudentHomePageSerializer
 
@@ -35,6 +34,33 @@ class StudentQuerryView(generics.ListAPIView):
 
         return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject
                                             , teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])
+
+
+# ----GET request --subject
+class SubjectView(generics.ListAPIView):
+    serializer_class = SubjectViewSerializer
+
+    def get_queryset(self):
+        data = self.request.data
+        t = StudentProfile.objects.get(user=self.request.user)
+        return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
+                                            subject_link=data['subject'],
+                                            # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
+                                            is_verified=True, )
+
+
+# ----GET request --subject, chapter
+class ChapterView(generics.ListAPIView):
+    serializer_class = ChapterSerializer
+
+    def get_queryset(self):
+        data = self.request.data
+        t = StudentProfile.objects.get(user=self.request.user)
+        return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
+                                            subject_link=data['subject'],
+                                            chapter__iexact=data['chapter'],
+                                            # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
+                                            is_verified=True, )
 
 
 # ----Doubts quesiton section, specific to video material--->

@@ -9,7 +9,7 @@ class NotesMaterialSerializer(serializers.ModelSerializer):
         model = NotesMaterial
         fields = ['notes_link', 'notes', 'question_ans','id']
 
-
+#-----home page------------->>>>>>>>
 class StudentHomePageSerializer(serializers.ModelSerializer):
     notes_material_link = NotesMaterialSerializer(many=True, read_only=True)
 
@@ -24,6 +24,19 @@ class StudentHomePageSerializer(serializers.ModelSerializer):
         for x in notes_material_data:
             NotesMaterial.objects.create(notes_link=temp, **x)
         return temp
+
+
+#-------subject view --------->>>>>>>
+class SubjectViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoMaterial
+        fields = ['chapter']
+
+#-------chapter view --------->>>>>>>
+class ChapterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoMaterial
+        fields = ['chapter','topic','description','video_link','teacher_link','teacher_name','thumbnail']
 
 
 # -------doubts part started----------->>>>
