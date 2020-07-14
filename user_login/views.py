@@ -1,7 +1,7 @@
 from rest_framework import generics
 from .serializers import *
-from subject_material.models import VideoMaterial
-from user_signup.models import StudentProfile,TeacherProfile
+from subject_material.models import VideoMaterial, Subject
+from user_signup.models import StudentProfile, TeacherProfile
 from rest_framework.permissions import IsAuthenticated
 from .models import DoubtsQuestion
 
@@ -12,9 +12,13 @@ class StudentHomePageView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return VideoMaterial.objects.filter(standard_link=StudentProfile.objects.get
-        (user=self.request.user).standard_or_class,teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])[:10]
+        t = StudentProfile.objects.get(user=self.request.user)
+        return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
+                                            subject_link__field_name__contains=[t.course_field],
+                                            teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])[:10]
 
+
+# subject_link=Subject.objects.filter(field_name__contains=[t.course_field])[:1],
 
 class StudentQuerryView(generics.ListAPIView):
     serializer_class = StudentHomePageSerializer
@@ -30,7 +34,7 @@ class StudentQuerryView(generics.ListAPIView):
                                                 teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])
 
         return VideoMaterial.objects.filter(standard_link=standard_link, subject_link=subject
-                                            ,teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])
+                                            , teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1])
 
 
 # ----Doubts quesiton section, specific to video material--->

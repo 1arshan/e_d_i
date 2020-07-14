@@ -7,7 +7,7 @@ from .models import DoubtsQuestion, QuestionComment, DoubtsQuestionPhotos, \
 class NotesMaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotesMaterial
-        fields = ['notes', 'question_ans']
+        fields = ['notes_link', 'notes', 'question_ans','id']
 
 
 class StudentHomePageSerializer(serializers.ModelSerializer):
@@ -62,7 +62,7 @@ class DoubtsAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DoubtsAnswer
-        fields = ['answer_question_link', 'doubts_answer','pk'
+        fields = ['answer_question_link', 'doubts_answer', 'pk'
             , 'answer_doubts_link']
 
 

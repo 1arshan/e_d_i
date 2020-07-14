@@ -70,17 +70,17 @@ class StudentVerifyOtpView(APIView):
                                                     last_name=data.last_name)
                 except Exception as e:
                     y = {"msg": "user with this phone number already exist"}
-                    return Response(y,status=status.HTTP_406_NOT_ACCEPTABLE)
+                    return Response(y, status=status.HTTP_406_NOT_ACCEPTABLE)
                 try:
 
                     StudentProfile.objects.create(standard_or_class=data.standard_or_class, user=user,
                                                   pincode=data.pincode, phone_number=data.phone_number,
                                                   email=data.email, last_name=data.last_name
-                                                  , first_name=data.first_name)
+                                                  , first_name=data.first_name, course_field=data.course_field)
                 except Exception as e:
                     user.delete()
                     y = {"msg": "phone number enter already exist"}
-                    return Response(y,status=status.HTTP_406_NOT_ACCEPTABLE)
+                    return Response(y, status=status.HTTP_406_NOT_ACCEPTABLE)
                 data.delete()
                 if user.email:
                     MailVerification(user, type='s')
@@ -159,12 +159,13 @@ class TeacherVerifyOtpView(APIView):
                     TeacherProfile.objects.create(teacher_description=data.description, user=user
                                                   , phone_number=data.phone_number,
                                                   email=data.email, last_name=data.last_name,
-                                                  first_name=data.first_name)
+                                                  first_name=data.first_name, subject=data.subject,
+                                                  experience=data.experience, max_qualification=data.max_qualification)
 
                 except Exception as e:
                     user.delete()
                     x = {"msg": "user with this email already exist"}
-                    return Response(x,status=status.HTTP_406_NOT_ACCEPTABLE)
+                    return Response(x, status=status.HTTP_406_NOT_ACCEPTABLE)
 
                 data.delete()
 
@@ -202,10 +203,12 @@ class StudetProfileView(APIView):
         t = StudentProfile.objects.get(phone_number=user)
         serializer = StudentSerializer(t, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+
+            #cd serializer.validated_data['phone_number'] =user
             u = User.objects.get(username=user)
             u.first_name = serializer.validated_data['first_name']
             u.last_name = serializer.validated_data['last_name']
+            serializer.save()
             u.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,8 +1,16 @@
 from django.contrib import admin
 from .models import Subject, StandardOrClass, VideoMaterial, NotesMaterial
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
-admin.site.register(Subject)
+
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin, DynamicArrayMixin):
+    pass
+
+
 admin.site.register(StandardOrClass)
+
+admin.site.register(NotesMaterial)
 
 
 class NotesInLine(admin.TabularInline):
@@ -12,9 +20,7 @@ class NotesInLine(admin.TabularInline):
 
 @admin.register(VideoMaterial)
 class VideoMaterial(admin.ModelAdmin):
-    list_display = ("subject_link", "standard_link",'teacher_name','topic')
+    list_display = ("subject_link", "standard_link", 'teacher_name', 'topic')
     inlines = [
         NotesInLine
     ]
-
-admin.site.register(NotesMaterial)

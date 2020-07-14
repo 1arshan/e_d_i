@@ -3,7 +3,7 @@ class ProjectSecretKey:
 
 
 class DatabaseSecret:
-    name = 'edifi_database'
+    name = 'test1'
     user = 'arshan'
     password = 'postgres'
     host = 'localhost'

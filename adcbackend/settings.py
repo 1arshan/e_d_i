@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .secrets import ProjectSecretKey,DatabaseSecret
+from .secrets import ProjectSecretKey, DatabaseSecret
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CELERY_BROKER_URL = 'amqp://localhost'
-#CELERY_BROKER_URL = 'sqs://'
+# CELERY_BROKER_URL = 'sqs://'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -25,8 +25,8 @@ SECRET_KEY = ProjectSecretKey.project_secret
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['ec2-52-66-197-44.ap-south-1.compute.amazonaws.com', 'localhost','127.0.0.1'
+    , 'ec2-13-126-196-234.ap-south-1.compute.amazonaws.com']
 
 # Application definition
 
@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #-----third party app ------->>
+    # -----third party app ------->>
     'django_better_admin_arrayfield',
 
-    #-----user define app ------>
+    # -----user define app ------>
     'user_signup',
     'broadcaster',
     'subject_material',
@@ -80,35 +80,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'adcbackend.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
-"""
-
-if 'RDS_DB_NAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': DatabaseSecret.engine,
+        'NAME': DatabaseSecret.name,
+        'USER': DatabaseSecret.user,
+        'PASSWORD': DatabaseSecret.password,
+        'HOST': DatabaseSecret.host,
+        'PORT': DatabaseSecret.port,
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': DatabaseSecret.engine,
-            'NAME': DatabaseSecret.name,
-            'USER': DatabaseSecret.user,
-            'PASSWORD': DatabaseSecret.password,
-            'HOST': DatabaseSecret.host,
-            'PORT': DatabaseSecret.port,
-        }
-    }
+}
 """
 
 DATABASES = {
@@ -117,7 +102,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
+"""
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -145,7 +130,6 @@ REST_FRAMEWORK = {
     ]
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -158,7 +142,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
