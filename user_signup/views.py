@@ -14,6 +14,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 from django.contrib.auth.models import Group
+from .tasks import send_parallel_sms
 
 
 # temperory student model till phone number verified
@@ -203,7 +204,6 @@ class StudetProfileView(APIView):
         t = StudentProfile.objects.get(phone_number=user)
         serializer = StudentSerializer(t, data=request.data)
         if serializer.is_valid():
-
             u = User.objects.get(username=user)
             u.first_name = serializer.validated_data['first_name']
             u.last_name = serializer.validated_data['last_name']
@@ -252,3 +252,12 @@ def activate_account(request, uidb64, token, typ):
         return HttpResponse('Email_verified', status=status.HTTP_201_CREATED)
     else:
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
+
+"""
+class TestingView(A)
+def testing_view():
+    print("1234")
+    x = "7355216857"
+    y = "acccc"
+    send_parallel_sms.delay(x, y)
+"""

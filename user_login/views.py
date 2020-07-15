@@ -46,7 +46,7 @@ class SubjectView(generics.ListAPIView):
     def get_queryset(self):
         t = StudentProfile.objects.get(user=self.request.user)
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
-                                            subject_link=self.kwargs['subject'],
+                                            subject_link=self.request.GET['subject'],
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
                                             is_verified=True)
 
@@ -59,8 +59,8 @@ class ChapterView(generics.ListAPIView):
         data = self.request.data
         t = StudentProfile.objects.get(user=self.request.user)
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
-                                            subject_link=data['subject'],
-                                            chapter=data['chapter'],
+                                            subject_link=self.request.GET['subject'],
+                                            chapter=self.request.GET['chapter'],
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
                                             is_verified=True)
 
