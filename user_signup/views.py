@@ -204,7 +204,6 @@ class StudetProfileView(APIView):
         serializer = StudentSerializer(t, data=request.data)
         if serializer.is_valid():
 
-            #cd serializer.validated_data['phone_number'] =user
             u = User.objects.get(username=user)
             u.first_name = serializer.validated_data['first_name']
             u.last_name = serializer.validated_data['last_name']
@@ -238,7 +237,7 @@ class TeacherProfileView(APIView):
 
 # do a redirection to login page
 # email verififcation
-def activate_account(request, uidb64, token, type):
+def activate_account(request, uidb64, token, typ):
     try:
         uid = force_bytes(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -246,9 +245,9 @@ def activate_account(request, uidb64, token, type):
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
     if user is not None and account_activation_token.check_token(user, token):
 
-        if type == 't':
+        if typ == 't':
             TeacherProfile.objects.update(user=user, email_verified=True)
-        elif type == 's':
+        elif typ == 's':
             StudentProfile.objects.update(user=user, email_verified=True)
         return HttpResponse('Email_verified', status=status.HTTP_201_CREATED)
     else:

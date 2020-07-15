@@ -4,6 +4,9 @@ from subject_material.models import VideoMaterial, Subject
 from user_signup.models import StudentProfile, TeacherProfile
 from rest_framework.permissions import IsAuthenticated
 from .models import DoubtsQuestion
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 # ----home page of student will onlt see video available---->>
@@ -41,12 +44,11 @@ class SubjectView(generics.ListAPIView):
     serializer_class = SubjectViewSerializer
 
     def get_queryset(self):
-        data = self.request.data
         t = StudentProfile.objects.get(user=self.request.user)
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
-                                            subject_link=data['subject'],
+                                            subject_link=self.kwargs['subject'],
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
-                                            is_verified=True, )
+                                            is_verified=True)
 
 
 # ----GET request --subject, chapter
@@ -58,9 +60,9 @@ class ChapterView(generics.ListAPIView):
         t = StudentProfile.objects.get(user=self.request.user)
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
                                             subject_link=data['subject'],
-                                            chapter__iexact=data['chapter'],
+                                            chapter=data['chapter'],
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
-                                            is_verified=True, )
+                                            is_verified=True)
 
 
 # ----Doubts quesiton section, specific to video material--->

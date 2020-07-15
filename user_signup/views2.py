@@ -19,6 +19,7 @@ from adcbackend.token import get_tokens_for_user, account_activation_token
 from django.http import HttpResponse
 from django.views.generic import View
 
+
 # from braodcaster.tasks import send_parallel_mail
 
 
@@ -127,3 +128,81 @@ class ResetPasswordView(View):
             return HttpResponse('Password Reset', status=status.HTTP_201_CREATED)
         else:
             return HttpResponse('link is invalid!', status=status.HTTP_400_BAD_REQUEST)
+
+
+# password check and otl send, when user is already login
+class PasswordVerificationView(APIView):
+
+    def post(self, request, typ):
+        data = request.data
+        user = self.request.user
+        if user.check_password(data['password']):
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = account_activation_token.make_token(user)
+            link = 'http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/' + 'user/change/credential/' + \
+                   uid + '/' + token + '/' + typ +"/"
+            x = {'otl': link,
+                 'msg': 'passwprd correct'}
+            return Response(x, status=status.HTTP_200_OK)
+        x = {'msg': 'password incorrect'}
+        return Response(x, status=status.HTTP_200_OK)
+
+
+# type-----otp send to sms
+class PasswordVerificationOtpView(APIView):
+
+    def get(self, request, typ):
+        user = self.request.user
+        otp = random.randrange(10101, 909090)
+        content = "verification code is: " + str(otp) + "\nthis code will valid for only 60 secs"
+        broadcast_sms(user.username, content)
+        if typ == 's':
+
+            user.studentprofile.otp = otp
+            user.studentprofile.save()
+        else:
+            user.teacherprofile.otp = otp
+            user.teacherprofile.save()
+        x = {'msg': 'otp send'}
+        return Response(x, status=status.HTTP_200_OK)
+
+
+class ChangeCredentialView(APIView):
+
+    def post(self, request, uidb64, token, typ):
+        try:
+            data = request.data
+            uid = force_bytes(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return HttpResponse('link is invalid!', status=status.HTTP_200_OK)
+        if user is not None and account_activation_token.check_token(user, token):
+
+            if data['field'] == 'password':
+                user.set_password(data['data'])
+                user.save()
+            elif data['field'] == 'email':
+                user.email = data['data']
+                user.save()
+                if typ == 't':
+                    user.teacherprofile.email = data['data']
+                    user.teacherprofile.save()
+                else:
+                    user.studentprofile.email = data['data']
+                    user.studentprofile.save()
+
+            elif data['field'] == 'phone_number':
+                user.username = data['data']
+                user.save()
+                if typ == 't':
+                    TeacherProfile.objects.filter(user=user).update(phone_number = data['data'])
+
+                else:
+
+                    StudentProfile.objects.filter(user=user).update(phone_number = data['data'])
+
+            x = {'msg': data['field'] + " change"}
+            return Response(x, status=status.HTTP_201_CREATED)
+        else:
+            x = {'msg': "link is invalid"}
+            return Response(x, status=status.HTTP_200_OK)

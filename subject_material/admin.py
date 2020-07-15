@@ -20,7 +20,7 @@ class NotesInLine(admin.TabularInline):
 
 @admin.register(VideoMaterial)
 class VideoMaterial(admin.ModelAdmin):
-    list_display = ("subject_link", "standard_link", 'teacher_name', 'topic')
+    list_display = ("subject_link", "standard_link", 'teacher_name', 'topic','chapter')
     inlines = [
         NotesInLine
     ]
