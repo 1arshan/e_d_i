@@ -51,6 +51,13 @@ class TeacherHomePageSerializer(serializers.ModelSerializer):
         fields = ['subject']
 
 
+class TeacherSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoMaterial
+        fields = ['chapter']
+
+
+
 # -------doubts part started----------->>>>
 class DoubtsQuestionPhotosSerializer(serializers.ModelSerializer):
     class Meta:

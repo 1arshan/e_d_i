@@ -7,15 +7,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from user_signup.models import TeacherProfile
-from django.contrib.auth.models import User
 
-
-class StudyMaterialUploadView(APIView):
-    permission_classes = [IsAuthenticated]
+#-----give subject,class,chapter get back all video material intersection-----
+class TeacherChapterView(APIView):
 
     def get(self, request):
-        user = self.request.user.username
-        serializer = TeacherUploadSerializer(VideoMaterial.objects.filter(teacher_link=user), many=True)
+        serializer = TeacherUploadSerializer(VideoMaterial.objects.filter(standard_link=self.request.GET['class'],
+                                                                          subject_link=self.request.GET['subject'],
+                                                                          chapter__iexact=request.GET['chapter'],
+                                                                          teacher_link=self.request.user.username,
+                                                                          is_verified=True), many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -27,5 +28,3 @@ class StudyMaterialUploadView(APIView):
             serializer.save()
             return Response("save", status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-

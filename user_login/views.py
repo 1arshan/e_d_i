@@ -40,7 +40,7 @@ class StudentQuerryView(generics.ListAPIView):
 
 
 # ----GET request --subject
-class SubjectView(generics.ListAPIView):
+class StudentSubjectView(generics.ListAPIView):
     serializer_class = SubjectViewSerializer
 
     def get_queryset(self):
@@ -48,11 +48,11 @@ class SubjectView(generics.ListAPIView):
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
                                             subject_link=self.request.GET['subject'],
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
-                                            is_verified=True)
+                                            is_verified=True).distinct('chapter')
 
 
 # ----GET request --subject, chapter
-class ChapterView(generics.ListAPIView):
+class StudentChapterView(generics.ListAPIView):
     serializer_class = ChapterSerializer
 
     def get_queryset(self):
@@ -63,15 +63,26 @@ class ChapterView(generics.ListAPIView):
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
                                             is_verified=True)
 
-# ----teacher view staterd
 
-#----teacher home page ----->>>>>>
+# ----teacher view staterd-------------------------------------------------->>>
+
+# ----teacher home page ----->>>>>>
 class TeacherHomePageView(generics.ListAPIView):
     serializer_class = TeacherHomePageSerializer
 
     def get_queryset(self):
-        user =self.request.user
-        return TeacherProfile.objects.all()
+        return TeacherProfile.objects.filter(phone_number=self.request.user.username)
+
+
+# ----teacher -give subject,class  got back chapter ---->>>
+class TeacherSubjectView(generics.ListAPIView):
+    serializer_class = TeacherSubjectSerializer
+
+    def get_queryset(self):
+        return VideoMaterial.objects.filter(standard_link=self.request.GET['class'],
+                                            subject_link=self.request.GET['subject'],
+                                            teacher_link=self.request.user.username,
+                                            is_verified=True).distinct('chapter')
 
 
 
