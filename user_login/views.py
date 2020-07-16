@@ -64,6 +64,13 @@ class StudentChapterView(generics.ListAPIView):
                                             is_verified=True)
 
 
+class StudentMaterialView(generics.ListAPIView):
+    serializer_class = ChapterSerializer
+
+    def get_queryset(self):
+        return VideoMaterial.objects.filter(pk=self.request.GET['pk'])
+
+
 # ----teacher view staterd-------------------------------------------------->>>
 
 # ----teacher home page ----->>>>>>
@@ -83,7 +90,6 @@ class TeacherSubjectView(generics.ListAPIView):
                                             subject_link=self.request.GET['subject'],
                                             teacher_link=self.request.user.username,
                                             is_verified=True).distinct('chapter')
-
 
 
 # ----Doubts quesiton section, specific to video material--->

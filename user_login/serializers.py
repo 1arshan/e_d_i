@@ -41,7 +41,8 @@ class ChapterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VideoMaterial
-        fields = ['chapter', 'topic','notes_material_link','description', 'video_link', 'teacher_link', 'teacher_name', 'thumbnail']
+        fields = ['chapter', 'topic','notes_material_link','description', 'video_link', 'teacher_link',
+                  'teacher_name', 'thumbnail','pk']
 
 
 # -------home page teacher------->>>>
