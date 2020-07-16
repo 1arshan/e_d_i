@@ -253,11 +253,11 @@ def activate_account(request, uidb64, token, typ):
     else:
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
 
-"""
-class TestingView(A)
-def testing_view():
-    print("1234")
-    x = "7355216857"
-    y = "acccc"
-    send_parallel_sms.delay(x, y)
-"""
+
+class TestingView(APIView):
+    def get(self,request):
+        print("1234")
+        x = "7355216857"
+        y = "acccc"
+        send_parallel_sms.delay(x, y)
+        return Response("ok")

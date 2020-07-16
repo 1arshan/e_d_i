@@ -14,7 +14,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = ['amqp://localhost','amqp://http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/',
+                     'amqp://ec2-52-66-197-44.ap-south-1.compute.amazonaws.com']
 # CELERY_BROKER_URL = 'sqs://'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/

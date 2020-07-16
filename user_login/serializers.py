@@ -2,14 +2,16 @@ from rest_framework import serializers
 from subject_material.models import VideoMaterial, NotesMaterial
 from .models import DoubtsQuestion, QuestionComment, DoubtsQuestionPhotos, \
     DoubtsAnswer, DoubtsAnswerPhotos, AnswerComment
+from user_signup.models import TeacherProfile
 
 
 class NotesMaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = NotesMaterial
-        fields = ['notes_link', 'notes', 'question_ans','id']
+        fields = ['notes_link', 'notes', 'question_ans', 'id']
 
-#-----home page------------->>>>>>>>
+
+# -----home page------------->>>>>>>>Student
 class StudentHomePageSerializer(serializers.ModelSerializer):
     notes_material_link = NotesMaterialSerializer(many=True, read_only=True)
 
@@ -26,17 +28,27 @@ class StudentHomePageSerializer(serializers.ModelSerializer):
         return temp
 
 
-#-------subject view --------->>>>>>>
+# -------subject view --------->>>>>>>
 class SubjectViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoMaterial
         fields = ['chapter']
 
-#-------chapter view --------->>>>>>>
+
+# -------chapter view --------->>>>>>>
 class ChapterSerializer(serializers.ModelSerializer):
+    notes_material_link = NotesMaterialSerializer(many=True, read_only=True)
+
     class Meta:
         model = VideoMaterial
-        fields = ['chapter','topic','description','video_link','teacher_link','teacher_name','thumbnail']
+        fields = ['chapter', 'topic','notes_material_link','description', 'video_link', 'teacher_link', 'teacher_name', 'thumbnail']
+
+
+# -------home page teacher------->>>>
+class TeacherHomePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeacherProfile
+        fields = ['subject']
 
 
 # -------doubts part started----------->>>>

@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('homepage/s/', views.StudentHomePageView.as_view(), name='s_homepage'),
+    path('homepage/t/', views.TeacherHomePageView.as_view(), name='h_homepage'),
     path('subject/s/', views.SubjectView.as_view(), name='s_subject'),
     path('chapter/s/', views.ChapterView.as_view(), name='s_chapter'),
     path('querry/s/', views.StudentQuerryView.as_view(), name='s_homepage'),

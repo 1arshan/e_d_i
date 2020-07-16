@@ -56,13 +56,23 @@ class ChapterView(generics.ListAPIView):
     serializer_class = ChapterSerializer
 
     def get_queryset(self):
-        data = self.request.data
         t = StudentProfile.objects.get(user=self.request.user)
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
                                             subject_link=self.request.GET['subject'],
                                             chapter=self.request.GET['chapter'],
                                             # teacher_link=TeacherProfile.objects.filter(is_verified=True)[:1],
                                             is_verified=True)
+
+# ----teacher view staterd
+
+#----teacher home page ----->>>>>>
+class TeacherHomePageView(generics.ListAPIView):
+    serializer_class = TeacherHomePageSerializer
+
+    def get_queryset(self):
+        user =self.request.user
+        return TeacherProfile.objects.all()
+
 
 
 # ----Doubts quesiton section, specific to video material--->
