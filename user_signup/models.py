@@ -52,7 +52,7 @@ class TempStudent(models.Model):
     password = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
-    course_field = models.CharField(max_length=20, blank=True)
+    course_field = models.CharField(max_length=20, blank=True,default='no_field')
 
 
 class TempTeacher(models.Model):

@@ -66,9 +66,10 @@ class StudentVerifyOtpView(APIView):
         if diff.seconds < 5000:
             if data_receive["otp"] == data.otp:
                 try:
-                    user = User.objects.create_user(username=data.phone_number, email=data.email,
-                                                    password=data.password, first_name=data.first_name,
-                                                    last_name=data.last_name)
+                    user = User.objects.get(username=str(int(data.phone_number) * 3))
+                    user.username=data.phone_number
+                    user.save()
+
                 except Exception as e:
                     y = {"msg": "user with this phone number already exist"}
                     return Response(y, status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -148,9 +149,9 @@ class TeacherVerifyOtpView(APIView):
         if diff.seconds < 500:
             if data_receive["otp"] == data.otp:
                 try:
-                    user = User.objects.create_user(username=data.phone_number, email=data.email,
-                                                    password=data.password, first_name=data.first_name,
-                                                    last_name=data.last_name)
+                    user = User.objects.get(username=str(int(data.phone_number) * 3))
+                    user.username = data.phone_number
+                    user.save()
 
                 except Exception as e:
                     x = {"msg": "user with this phone number already exist"}
@@ -255,7 +256,7 @@ def activate_account(request, uidb64, token, typ):
 
 
 class TestingView(APIView):
-    def get(self,request):
+    def get(self, request):
         print("1234")
         x = "7355216857"
         y = "acccc"

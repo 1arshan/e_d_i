@@ -2,14 +2,12 @@ from rest_framework import generics
 from .serializers import *
 from subject_material.models import VideoMaterial, Subject
 from user_signup.models import StudentProfile, TeacherProfile
-from rest_framework.permissions import IsAuthenticated
 from .models import DoubtsQuestion
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from user_signup.serializers import StudentSerializer
 
 
-# ----home page of student will onlt see video available---->>
+# ----home page of student will only see video available---->>
 class StudentHomePageView(generics.ListAPIView):
     serializer_class = StudentHomePageSerializer
     permission_classes = [IsAuthenticated]
