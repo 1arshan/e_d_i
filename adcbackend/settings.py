@@ -11,12 +11,42 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 from .secrets import ProjectSecretKey, DatabaseSecret
 import os
+import urllib.parse
+import djcelery
+from kombu.utils.url import safequote
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CELERY_BROKER_URL = ['amqp://localhost','amqp://http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/',
-                     'amqp://ec2-52-66-197-44.ap-south-1.compute.amazonaws.com']
-# CELERY_BROKER_URL = 'sqs://'
+
+
+aws_access_key = safequote("AKIA5VSMNQXEBU6IOHBY")
+aws_secret_key = safequote("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")
+djcelery.setup_loader()
+
+CELERY_TASK_DEFAULT_QUEUE = 'edifi-server5-queque'
+BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@https://sqs.ap-south-1.amazonaws.com/939684365768/edifi-server5-queque".format(
+    aws_access_key=aws_access_key, aws_secret_key=aws_secret_key,
+)
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': 'ap-south-1',
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 

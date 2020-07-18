@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from user_signup.models import TeacherProfile
 
-#-----give subject,class,chapter get back all video material intersection-----
+
+# -----give subject,class,chapter get back all video material intersection-----
 class TeacherChapterView(APIView):
 
     def get(self, request):
@@ -26,5 +27,6 @@ class TeacherChapterView(APIView):
         if serializer.is_valid():
             serializer.validated_data['teacher_link'] = teacher_name
             serializer.save()
-            return Response("save", status=status.HTTP_201_CREATED)
+            x = {"msg": "material added"}
+            return Response(x, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
