@@ -14,7 +14,8 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 from django.contrib.auth.models import Group
-from .tasks import send_parallel_sms
+from .tasks import send_parallel_sms, send_parallel_mail
+import random
 
 
 # temperory student model till phone number verified
@@ -259,6 +260,6 @@ class TestingView(APIView):
     def get(self, request):
         print("1234")
         x = "7355216857"
-        y = "acccc"
+        y = str(random.randrange(10101, 909090))
         send_parallel_sms.delay(x, y)
         return Response("ok")

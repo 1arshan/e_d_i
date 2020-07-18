@@ -12,6 +12,7 @@ urlpatterns = [
     path('phone_number/verify/t/', views.TeacherVerifyOtpView.as_view(), name='t_verify'),
     path('profile/s/', views.StudetProfileView.as_view(), name='s_profile'),
     path('profile/t/', views.TeacherProfileView.as_view(), name='t_profile'),
+    path('email/verification/<str:typ>/', views2.EmailVerificationView.as_view(), name='email_veriication'),
 
 ###- ---chaging important credetnial--------->>>>
     path('password/verification/<str:typ>/', views2.PasswordVerificationView.as_view()),

@@ -18,6 +18,7 @@ from broadcaster.mail import reset_otp_mail
 from adcbackend.token import get_tokens_for_user, account_activation_token
 from django.http import HttpResponse
 from django.views.generic import View
+from broadcaster.mail import MailVerification
 
 
 # from braodcaster.tasks import send_parallel_mail
@@ -140,7 +141,7 @@ class PasswordVerificationView(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = account_activation_token.make_token(user)
             link = 'http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/' + 'user/change/credential/' + \
-                   uid + '/' + token + '/' + typ +"/"
+                   uid + '/' + token + '/' + typ + "/"
             x = {'otl': link,
                  'msg': 'passwprd correct'}
             return Response(x, status=status.HTTP_200_OK)
@@ -195,14 +196,23 @@ class ChangeCredentialView(APIView):
                 user.username = data['data']
                 user.save()
                 if typ == 't':
-                    TeacherProfile.objects.filter(user=user).update(phone_number = data['data'])
+                    TeacherProfile.objects.filter(user=user).update(phone_number=data['data'])
 
                 else:
 
-                    StudentProfile.objects.filter(user=user).update(phone_number = data['data'])
+                    StudentProfile.objects.filter(user=user).update(phone_number=data['data'])
 
             x = {'msg': data['field'] + " change"}
             return Response(x, status=status.HTTP_201_CREATED)
         else:
             x = {'msg': "link is invalid"}
             return Response(x, status=status.HTTP_200_OK)
+
+
+class EmailVerificationView(APIView):
+
+    def get(self, request, typ):
+        user = self.request.user
+        MailVerification(user, type=typ)
+        x = {'msg': "verification mail is send to your email"}
+        return Response(x, status=status.HTTP_200_OK)

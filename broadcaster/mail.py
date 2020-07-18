@@ -17,18 +17,19 @@ def broadcast_mail(subject, content, to_email):
         subject=subject,
         html_content=content
     )
-    return Response("send")
-    """try:
+
+    try:
 
         sg = SendGridAPIClient(EmailToken.sendgrid_token)
         response = sg.send(message)
-        # print("mail send")
+        print(response)
+       # print("mail send")
     except Exception as e:
-        # print("mail not send")
+        print("mail not send")
         #print(e)
         pass
+    return Response("send")
 
-"""
 
 def MailVerification(user, type):
     # domain = current_site.domain
