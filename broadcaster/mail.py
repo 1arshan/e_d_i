@@ -1,7 +1,7 @@
 from user_signup.tasks import send_parallel_mail
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from user_signup.token import account_activation_token
+from adcbackend.token import account_activation_token
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from adcbackend.secrets import EmailToken
@@ -40,9 +40,9 @@ def MailVerification(user, type):
     receiver_email = user.email
     subject = 'Verify Your Email'
     html_content = str('<h3> Hello ' + name.capitalize() + ',</h3>'
-                                                           '<p>Please click on the link to confirm your registration,</p>'
-                                                           'http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/'
-                       + 'user/verify_email/' + uid + '/' + token + '/' + type)
+                    '<p>Please click on the link to confirm your registration,</p>'
+                    'http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/'
+                    + 'user/verify_email/' + uid + '/' + token + '/' + type)
     #broadcast_mail(subject, html_content, receiver_email)
     send_parallel_mail.delay(subject, html_content, receiver_email)
 

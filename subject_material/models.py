@@ -39,7 +39,7 @@ class VideoMaterial(models.Model):
     video_link = models.URLField(blank=True)
     teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE, to_field='phone_number')
     teacher_name = models.CharField(max_length=50, default='Anonymous')
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=True)
 
     def __str__(self):
         return f'Topic: {self.topic}; Subject: {self.subject_link}; Class: {self.standard_link} '

@@ -29,7 +29,7 @@ class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=True)
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     email = models.EmailField(unique=True, blank=True)

@@ -246,11 +246,12 @@ def activate_account(request, uidb64, token, typ):
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
     if user is not None and account_activation_token.check_token(user, token):
-
         if typ == 't':
-            TeacherProfile.objects.update(user=user, email_verified=True)
+            user.teacherprofile.email_verified = True
+            user.teacherprofile.save()
         elif typ == 's':
-            StudentProfile.objects.update(user=user, email_verified=True)
+            user.studentprofile.email_verified=True
+            user.studentprofile.save()
         return HttpResponse('Email_verified', status=status.HTTP_201_CREATED)
     else:
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
