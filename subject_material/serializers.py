@@ -1,25 +1,19 @@
 from rest_framework import serializers
 from subject_material.models import VideoMaterial, Subject, StandardOrClass, NotesMaterial
-#from user_login.serializers import NotesMaterialSerializer
+from user_login.serializers import NotesMaterialSerializer
 from rest_framework_simplejwt import settings
 
 
-class NotesMaterialSerializer2(serializers.ModelSerializer):
-    class Meta:
-        model = NotesMaterial
-        fields = ['notes', 'question_ans', 'id']
+class TeacherUploadSerializerGet(serializers.ModelSerializer):
+    notes_material_link = NotesMaterialSerializer(many=True)
 
-
-
-class TeacherUploadSerializer(serializers.ModelSerializer):
-    notes_material_link = NotesMaterialSerializer2(many=True)
-
+    # 'notes_material_link',
     class Meta:
         model = VideoMaterial
         fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
-                  'notes_material_link', 'chapter', 'thumbnail']
+                  'chapter', 'thumbnail', 'id', 'notes_material_link']
 
-    def create(self, validated_data):
+    """def create(self, validated_data):
         notes_material_data = validated_data.pop('notes_material_link')
         temp = VideoMaterial.objects.create(**validated_data)
         for x in notes_material_data:
@@ -50,3 +44,11 @@ class TeacherUploadSerializer(serializers.ModelSerializer):
             temp.save()
 
         return instance
+"""
+
+
+class TeacherUploadSerializerPost(serializers.ModelSerializer):
+    class Meta:
+        model = VideoMaterial
+        fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
+                  'chapter', 'thumbnail', 'id']

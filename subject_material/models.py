@@ -19,15 +19,16 @@ class StandardOrClass(models.Model):
 
 
 def renaming_uploaded_file1(instance, filename):
-    return "video_material/" + str(instance.notes_link) + "/notes" + "_" + str(instance.pk) + "_" + filename
+    return "video_material/" + "notes" + "_" + str(instance.pk) + "_" + filename
 
 
+# str(instance.notes_link) +
 def renaming_uploaded_file2(instance, filename):
-    return "video_material/" + str(instance.notes_link) + "/ques" + "_" + str(instance.pk) + "_" + filename
+    return "video_material/" + "ques" + "_" + str(instance.pk) + "_" + filename
 
 
 def renaming_uploaded_file3(instance, filename):
-    return "video_material/" + str(instance.pk) + "/ques" + "_" + filename
+    return "video_material/" + str(instance.topic) + "/thumbnail" + "_" + filename
 
 
 class VideoMaterial(models.Model):
