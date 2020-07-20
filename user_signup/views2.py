@@ -30,7 +30,8 @@ class PasswordResetView(APIView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.otp = random.randrange(10101, 909090)
+        # self.otp = random.randrange(10101, 909090) -----this nedd to be updated
+        self.otp = "1234"
 
     def post(self, request):
         data = request.data
@@ -57,10 +58,10 @@ class PasswordResetView(APIView):
                 reset_otp_mail(user)
 
             except Exception as e:
-                x = {'msg': "One time link is send to your email if not receive please cheack email address enter"}
+                x = {'msg': "One time link is send to your email if not receive please check email address enter"}
                 return Response(x, status=status.HTTP_200_OK)
 
-            x = {'msg': "One time link is send to your email if not receive please cheack email address enter"}
+            x = {'msg': "One time link is send to your email if not receive please check email address enter"}
             return Response(x, status=status.HTTP_200_OK)
 
 
@@ -168,6 +169,7 @@ class PasswordVerificationOtpView(APIView):
         return Response(x, status=status.HTTP_200_OK)
 
 
+# ----give 'data' and 'field' and change credential
 class ChangeCredentialView(APIView):
 
     def post(self, request, uidb64, token, typ):

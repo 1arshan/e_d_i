@@ -44,7 +44,7 @@ def MailVerification(user, type):
                     'http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/'
                     + 'user/verify_email/' + uid + '/' + token + '/' + type)
     #broadcast_mail(subject, html_content, receiver_email)
-    send_parallel_mail.delay(subject, html_content, receiver_email)
+    #send_parallel_mail.delay(subject, html_content, receiver_email)
 
 
 def reset_otp_mail(user):

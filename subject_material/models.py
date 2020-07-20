@@ -25,12 +25,13 @@ def renaming_uploaded_file1(instance, filename):
 def renaming_uploaded_file2(instance, filename):
     return "video_material/" + str(instance.notes_link) + "/ques" + "_" + str(instance.pk) + "_" + filename
 
+
 def renaming_uploaded_file3(instance, filename):
     return "video_material/" + str(instance.pk) + "/ques" + "_" + filename
 
 
 class VideoMaterial(models.Model):
-    thumbnail = models.ImageField(blank=True,upload_to=renaming_uploaded_file3)
+    thumbnail = models.ImageField(blank=True, upload_to=renaming_uploaded_file3)
     subject_link = models.ForeignKey(Subject, on_delete=models.CASCADE, to_field='subject_name')
     standard_link = models.ForeignKey(StandardOrClass, on_delete=models.CASCADE, to_field='standard_or_class')
     chapter = models.CharField(max_length=30)
@@ -40,6 +41,7 @@ class VideoMaterial(models.Model):
     teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE, to_field='phone_number')
     teacher_name = models.CharField(max_length=50, default='Anonymous')
     is_verified = models.BooleanField(default=True)
+    date_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Topic: {self.topic}; Subject: {self.subject_link}; Class: {self.standard_link} '
