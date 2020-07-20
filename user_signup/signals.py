@@ -17,11 +17,14 @@ def teacher_otp(sender, instance, **kwargs):
 
         User.objects.update_or_create(username=str(int(instance.phone_number) * 30),
                                       defaults={
-                                          "password": instance.password,
+
                                           "email": instance.email,
                                           "first_name": instance.first_name,
                                           "last_name": instance.last_name
-                                      })
+                                      })  # .set_password(instance.password)
+        u = User.objects.get(username=str(int(instance.phone_number) * 30))
+        u.set_password(instance.password)
+        u.save()
         instance.password = "***************"
     except:
         pass
@@ -36,12 +39,15 @@ def student_otp(sender, instance, **kwargs):
     # send_parallel_sms.delay(instance.phone_number, content)
     try:
         User.objects.update_or_create(username=str(int(instance.phone_number) * 30),
-                                      defaults={
-                                          "password": instance.password,
-                                          "email": instance.email,
-                                          "first_name": instance.first_name,
-                                          "last_name": instance.last_name
-                                      })
+                                          defaults={
+                                              "password": instance.password,
+                                              "email": instance.email,
+                                              "first_name": instance.first_name,
+                                              "last_name": instance.last_name
+                                          })
+        u = User.objects.get(username=str(int(instance.phone_number) * 30))
+        u.set_password(instance.password)
+        u.save()
         instance.password = "***************"
     except:
         pass
