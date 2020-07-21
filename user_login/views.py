@@ -17,7 +17,9 @@ class StudentHomePageView(generics.ListAPIView):
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
                                             subject_link__field_name__contains=[t.course_field],
                                             is_verified=True).order_by('-date_time')[:10]
-#.order_by('-date_time')
+
+
+# .order_by('-date_time')
 
 # toic ,subject ---old version --GET request
 class StudentQuerryView(generics.ListAPIView):

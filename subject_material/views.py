@@ -28,7 +28,7 @@ class TeacherChapterView(APIView):
         if serializer.is_valid():
             serializer.validated_data['teacher_link'] = teacher_name
             serializer.save()
-            x = {"id": serializer.data['id']}
+            x = {"notes_link": serializer.data['id']}
             return Response(x, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -36,9 +36,20 @@ class TeacherChapterView(APIView):
 class TeacherChapterNotesView(APIView):
 
     def post(self, request):
-        serializer = NotesMaterialSerializer(data=request.data)
+        data = request.data
+        data['notes_link'] = self.request.GET['notes_link']
+        serializer = NotesMaterialSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
-            x = {"msg": "material save"}
-            return Response(x, status=status.HTTP_201_CREATED)
+            try:
+                if serializer.validated_data['notes_link'].teacher_link.phone_number == self.request.user.username:
+                    serializer.save()
+                    x = {"msg": "material save"}
+                    return Response(x, status=status.HTTP_201_CREATED)
+                else:
+                    x = {"msg": "you are not authorize to upload this content"}
+                    return Response(x, status=status.HTTP_401_UNAUTHORIZED)
+            except:
+                x = {"msg": "notes link enter is not valid"}
+                return Response(x, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
