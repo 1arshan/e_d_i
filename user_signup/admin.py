@@ -18,6 +18,7 @@ class TempTeacherAdmin(admin.ModelAdmin):
 @admin.register(StudentProfile)
 class StudentProfileInline(admin.ModelAdmin):
     list_display = ("phone_number", "email", 'first_name', 'last_name', 'standard_or_class')
+    readonly_fields = ('date',)
 
 
 @admin.register(TeacherProfile)

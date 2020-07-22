@@ -20,3 +20,8 @@ class SmsToken:
 class EmailToken:
     from_email = 'onearshanahmad@outlook.com'
     sendgrid_token = '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 '
+
+
+class Cloud:
+    allowed_host = ['ec2-15-207-21-34.ap-south-1.compute.amazonaws.com', 'localhost', '127.0.0.1'
+        , 'ec2-13-126-196-234.ap-south-1.compute.amazonaws.com']

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .secrets import ProjectSecretKey, DatabaseSecret
+from .secrets import ProjectSecretKey, DatabaseSecret, Cloud
 import os
 import urllib.parse
 import djcelery
@@ -17,7 +17,6 @@ from kombu.utils.url import safequote
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 aws_access_key = safequote("AKIA5VSMNQXEBU6IOHBY")
 aws_secret_key = safequote("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")
@@ -31,22 +30,6 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     'region': 'ap-south-1',
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -56,9 +39,7 @@ SECRET_KEY = ProjectSecretKey.project_secret
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-52-66-197-44.ap-south-1.compute.amazonaws.com', 'localhost','127.0.0.1'
-    , 'ec2-13-126-196-234.ap-south-1.compute.amazonaws.com']
-
+ALLOWED_HOSTS = Cloud.allowed_host
 # Application definition
 
 INSTALLED_APPS = [

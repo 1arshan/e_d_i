@@ -13,7 +13,6 @@ from django.core.exceptions import ObjectDoesNotExist
 import random
 from django.db.models import Q
 from django.utils.http import urlsafe_base64_encode
-from rest_framework.decorators import api_view
 from broadcaster.mail import reset_otp_mail
 from adcbackend.token import get_tokens_for_user, account_activation_token
 from django.http import HttpResponse
@@ -40,10 +39,15 @@ class PasswordResetView(APIView):
             broadcast_sms(data['username'], content)
             try:
                 if data['type'] == 's':
+                    temp = StudentProfile.objects.get(phone_number=data['username'])
+                    temp.otp = self.otp
+                    temp.save()
 
-                    StudentProfile.objects.filter(phone_number=data['username']).update(otp=self.otp)
                 else:
-                    TeacherProfile.objects.filter(phone_number=data['username']).update(otp=self.otp)
+                    temp = TeacherProfile.objects.get(phone_number=data['username'])
+                    temp.otp = self.otp
+                    temp.save()
+
             except Exception:
                 x = {'msg': "otp send to your number ,if not receive please check mobile number entered"}
                 return Response(x, status=status.HTTP_200_OK)
@@ -75,8 +79,9 @@ class PasswordResetOtpVerifyView(APIView):
             t = User.objects.get(Q(username=data['username']))
 
             if data['type'] == 's':
+
                 diff = datetime.now(timezone.utc) - t.studentprofile.date
-                if data['otp'] == t.studentprofile.otp and diff.seconds < 60000:
+                if data['otp'] == t.studentprofile.otp and diff.seconds < 60:
                     x = get_tokens_for_user(t)
                     x["msg"] = "Otp is correct"
                     return Response(x, status=status.HTTP_200_OK)
@@ -86,7 +91,7 @@ class PasswordResetOtpVerifyView(APIView):
 
             else:
                 diff = datetime.now(timezone.utc) - t.teacherprofile.date
-                if data['otp'] == t.teacherprofile.otp and diff.seconds < 60000:
+                if data['otp'] == t.teacherprofile.otp and diff.seconds < 60:
                     x = get_tokens_for_user(t)
                     x["msg"] = "Otp is correct"
                     return Response(x, status=status.HTTP_200_OK)

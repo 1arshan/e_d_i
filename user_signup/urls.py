@@ -19,15 +19,16 @@ urlpatterns = [
     path('change/credential/<str:uidb64>/<str:token>/<str:typ>/', views2.ChangeCredentialView.as_view()),
 # ------Done ------>>>>>
 
-
+#----Forget Password
     #path('password/otp/verify/<str:typ>', views2.PasswordResetOtpVerifyView.as_view(), name='otpverify'),#otl jaega
-    path('password/verification/otp/<str:typ>/', views2.PasswordVerificationOtpView.as_view()),
-    path('password_reset/', views2.PasswordResetView.as_view()),#otp jaega, without login
+    path('password/verification/', views2.PasswordResetOtpVerifyView.as_view()),#access token milega
+    path('password/reset/', views2.PasswordResetView.as_view()),#otp jaega, without login
+    path('password/reset/new_password/', views2.NewPasswordView.as_view(), name='sms_newpassword'),# password change hoga
     #path('otp/login/', views2.otp_login_view,name='otplogin'),
+#------Done
 
     path('verify_email/<str:uidb64>/<str:token>/<str:typ>/',views.activate_account, name='activate'),
     #path('new_password/<str:uidb64>/<str:token>/',views2.reset_password, name='email_newpassword')
-    path('password_reset/new_password/', views2.NewPasswordView.as_view(), name='sms_newpassword'),
     #url(r'^new_password/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
      #   views2.reset_password, name='newpassword'),
 
