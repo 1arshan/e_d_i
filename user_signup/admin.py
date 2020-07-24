@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import TempStudent, StudentProfile, TempTeacher, TeacherProfile
-
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 @admin.register(TempStudent)
 class TempStudentAdmin(admin.ModelAdmin):
@@ -22,5 +22,5 @@ class StudentProfileInline(admin.ModelAdmin):
 
 
 @admin.register(TeacherProfile)
-class TeacherProfileInline(admin.ModelAdmin):
+class TeacherProfileInline(admin.ModelAdmin,DynamicArrayMixin):
     list_display = ("phone_number", "email", 'first_name', 'last_name')
