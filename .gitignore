@@ -1,15 +1,2 @@
 venv
 cloud
-#imp
-#adcbackend/secrets.py
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-#01_migrate:
- #		command: "django-admin.py migrate"
- #		leader_only: true
- #
-#option_settings:
- # aws:elasticbeanstalk:container:python:
- # DJANGO_SETTINGS_MODULE: adcbackend.settings
