@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     # -----third party app ------->>
     'django_better_admin_arrayfield',
+    'storages',
 
     # -----user define app ------>
     'user_signup',
@@ -147,10 +148,23 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+AWS_ACCESS_KEY_ID = 'AKIA5VSMNQXEBU6IOHBY'
+AWS_SECRET_ACCESS_KEY = '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'
+
+AWS_STORAGE_BUCKET_NAME = 'edifi-server5-bucket'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'production'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'adcbackend/static'),
+]
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
