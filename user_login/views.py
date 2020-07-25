@@ -11,12 +11,13 @@ from user_signup.serializers import StudentSerializer
 class StudentHomePageView(generics.ListAPIView):
     serializer_class = StudentHomePageSerializer
     permission_classes = [IsAuthenticated]
-
+    #queryset =VideoMaterial.objects.all() 
+    
     def get_queryset(self):
         t = StudentProfile.objects.get(user=self.request.user)
         return VideoMaterial.objects.filter(standard_link=t.standard_or_class,
                                             subject_link__field_name__contains=[t.course_field],
-                                            is_verified=True).order_by('-date_time')[:10]
+                                            is_verified=True)#.order_by('-date_time')[:10]
 
 
 # .order_by('-date_time')
