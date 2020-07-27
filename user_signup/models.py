@@ -19,7 +19,7 @@ class StudentProfile(models.Model):
     last_name = models.CharField(max_length=15)
     email = models.EmailField(blank=True)
     phone_number = models.CharField(max_length=13, unique=True, primary_key=True)
-    course_field = models.CharField(max_length=20, blank=True,default='no_field')
+    course_field = models.CharField(max_length=20, blank=True, default='no_field')
 
 
 class TeacherProfile(models.Model):
@@ -52,7 +52,7 @@ class TempStudent(models.Model):
     password = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now=True)
     otp = models.CharField(max_length=8, blank=True)
-    course_field = models.CharField(max_length=20, blank=True,default='no_field')
+    course_field = models.CharField(max_length=20, blank=True, default='no_field')
 
 
 class TempTeacher(models.Model):
@@ -67,3 +67,8 @@ class TempTeacher(models.Model):
     subject = ArrayField(models.CharField(max_length=20, blank=True), blank=True)
     max_qualification = models.CharField(max_length=50)
     experience = models.CharField(max_length=100, blank=True)
+
+
+class TestingModel(models.Model):
+    photo = models.ImageField(upload_to='testing1')
+    name = models.CharField(max_length=10)

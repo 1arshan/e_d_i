@@ -1,4 +1,4 @@
-from .models import TempStudent, TempTeacher, StudentProfile, TeacherProfile
+from .models import TempStudent, TempTeacher, StudentProfile, TeacherProfile, TestingModel
 from rest_framework import serializers
 
 
@@ -28,3 +28,9 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = TeacherProfile
         fields = ['photo', 'first_name', 'last_name', 'email', 'phone_number', 'teacher_description'
             , 'email_verified', 'subject', 'max_qualification', 'experience']
+
+
+class TestingModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestingModel
+        fields = ['photo', 'name']

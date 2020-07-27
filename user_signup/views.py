@@ -2,7 +2,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from .models import TempStudent, StudentProfile, TempTeacher, TeacherProfile
-from .serializers import TempStudentSerializer, TempTeacherSerializer, StudentSerializer, TeacherSerializer
+from .serializers import TempStudentSerializer, TempTeacherSerializer, StudentSerializer, TeacherSerializer, \
+    TestingModelSerializer
 from datetime import datetime, timezone
 from django.contrib.auth.models import User
 from broadcaster.mail import MailVerification
@@ -16,6 +17,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import Group
 from .tasks import send_parallel_sms, send_parallel_mail
 import random
+import base64
 
 
 # temperory student model till phone number verified
@@ -68,7 +70,7 @@ class StudentVerifyOtpView(APIView):
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.get(username=str(int(data.phone_number) * 30))
-                    user.username=data.phone_number
+                    user.username = data.phone_number
                     user.save()
 
                 except Exception as e:
@@ -250,7 +252,7 @@ def activate_account(request, uidb64, token, typ):
             user.teacherprofile.email_verified = True
             user.teacherprofile.save()
         elif typ == 's':
-            user.studentprofile.email_verified=True
+            user.studentprofile.email_verified = True
             user.studentprofile.save()
         return HttpResponse('Email_verified', status=status.HTTP_201_CREATED)
     else:
@@ -258,9 +260,16 @@ def activate_account(request, uidb64, token, typ):
 
 
 class TestingView(APIView):
-    def get(self, request):
-        print("1234")
-        x = "7355216857"
-        y = str(random.randrange(10101, 909090))
-        send_parallel_sms.delay(x, y)
-        return Response("ok")
+    permission_classes = []
+    def post(self, request):
+        serializer = TestingModelSerializer(data=request.data)
+        #serializer.
+        imgstring = serializer.initial_data['photo']
+        imgdata = base64.b64decode(imgstring)
+        #filename = 'some_image.jpg'  # I assume you have a way of picking unique filenames
+        #with open(filename, 'wb') as f:
+        serializer.initial_data['photo'] = imgdata
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

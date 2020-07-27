@@ -2,11 +2,20 @@ class ProjectSecretKey:
     project_secret = 'n#^5ij8q6u4a75xsn_e5m&c)6y_e2w9m4gw0@b9^b%jf2a=txp'
 
 
-class DatabaseSecret:
+class DatabaseSecretLocal:
     name = 'test1'
     user = 'arshan'
     password = 'palindrome'
     host = 'localhost'
+    port = '5432'
+    engine = 'django.db.backends.postgresql_psycopg2'
+
+
+class DatabaseSecretCloud:
+    name = 'test1'
+    user = 'arshan'
+    password = 'nomansland'
+    host = 'edifi-server-db.chvkllrtnsw8.ap-south-1.rds.amazonaws.com'
     port = '5432'
     engine = 'django.db.backends.postgresql_psycopg2'
 

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from .secrets import ProjectSecretKey, DatabaseSecret, Cloud
+from .secrets import ProjectSecretKey, DatabaseSecretLocal, Cloud ,DatabaseSecretCloud
 import os
 import urllib.parse
 import djcelery
@@ -18,8 +18,8 @@ from kombu.utils.url import safequote
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-aws_access_key = safequote("AKIA5VSMNQXEBU6IOHBY")
-aws_secret_key = safequote("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")
+aws_access_key = safequote("AKIA5VSMNQIOHBY")
+aws_secret_key = safequote("x4ZbVgb6q2GvALJL+4GqEHV+oN/WdvaV")
 djcelery.setup_loader()
 
 CELERY_TASK_DEFAULT_QUEUE = 'edifi-server5-queque'
@@ -96,17 +96,30 @@ WSGI_APPLICATION = 'adcbackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': DatabaseSecretLocal.engine,
+        'NAME': DatabaseSecretLocal.name,
+        'USER': DatabaseSecretLocal.user,
+        'PASSWORD': DatabaseSecretLocal.password,
+        'HOST': DatabaseSecretLocal.host,
+        'PORT': DatabaseSecretLocal.port,
+    }
+}
+"""
 
 DATABASES = {
     'default': {
-        'ENGINE': DatabaseSecret.engine,
-        'NAME': DatabaseSecret.name,
-        'USER': DatabaseSecret.user,
-        'PASSWORD': DatabaseSecret.password,
-        'HOST': DatabaseSecret.host,
-        'PORT': DatabaseSecret.port,
+        'ENGINE': DatabaseSecretCloud.engine,
+        'NAME': DatabaseSecretCloud.name,
+        'USER': DatabaseSecretCloud.user,
+        'PASSWORD': DatabaseSecretCloud.password,
+        'HOST': DatabaseSecretCloud.host,
+        'PORT': DatabaseSecretCloud.port,
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
