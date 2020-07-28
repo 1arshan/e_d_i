@@ -23,7 +23,7 @@ def broadcast_mail(subject, content, to_email):
         sg = SendGridAPIClient(EmailToken.sendgrid_token)
         response = sg.send(message)
         print(response)
-       # print("mail send")
+        print("mail send")
     except Exception as e:
         print("mail not send")
         #print(e)

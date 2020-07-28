@@ -18,6 +18,9 @@ from adcbackend.token import get_tokens_for_user, account_activation_token
 from django.http import HttpResponse
 from django.views.generic import View
 from broadcaster.mail import MailVerification
+from django.shortcuts import render
+from .forms import PasswordChangeForm
+from django.core.exceptions import MultipleObjectsReturned
 
 
 # from braodcaster.tasks import send_parallel_mail
@@ -56,10 +59,14 @@ class PasswordResetView(APIView):
             return Response(x, status=status.HTTP_200_OK)
 
         elif data['medium'] == 'email':
-
             try:
-                user = User.objects.get(email__iexact=data['username'])
+                user = User.objects.get(email=data['username'])
                 reset_otp_mail(user)
+
+            except MultipleObjectsReturned:
+                x = {'msg': "More than one account is link with this email so password cannot be reset by email try "
+                            "sms method"}
+                return Response(x, status=status.HTTP_200_OK)
 
             except Exception as e:
                 x = {'msg': "One time link is send to your email if not receive please check email address enter"}
@@ -115,9 +122,14 @@ class NewPasswordView(APIView):
 
 
 # inserting new password
-class ResetPasswordView(View):
-    model = StudentProfile
-    template_name = 'EClass/premium.html'
+class EmailResetPasswordView(View):
+    form_class = PasswordChangeForm
+    template_name = 'UserSignup/change_password.html'
+
+    # display blank form
+    def get(self, request, uidb64, token):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, uidb64, token):
         try:
@@ -126,13 +138,21 @@ class ResetPasswordView(View):
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             return HttpResponse('Activation link is invalid!', status=status.HTTP_400_BAD_REQUEST)
         if user is not None and account_activation_token.check_token(user, token):
-            data = request.data
-            if data['new_password'] == data['confirm_password']:
-                user.set_password(data['new_password'])
-                user.save()
-            else:
-                return HttpResponse('new password and confirm password are not same', status=status.HTTP_201_CREATED)
-            return HttpResponse('Password Reset', status=status.HTTP_201_CREATED)
+            form = PasswordChangeForm(request.POST)
+            if form.is_valid():
+                data = form.cleaned_data
+                if data['new_password'] == data['confirm_password']:
+                    user.set_password(data['new_password'])
+                    user.save()
+                else:
+
+                    return render(request, 'UserSignup/change_password.html', {'msg': 'Password enter does not match '
+                                                                                      'with confirm password',
+                                                                               'form': form})
+                return HttpResponse('Your password has been reset,Login in the app to access your account',
+                                    status=status.HTTP_201_CREATED)
+            return render(request, 'UserSignup/change_password.html', {'msg': 'data enter is not valid',
+                                                                       'form': form})
         else:
             return HttpResponse('link is invalid!', status=status.HTTP_400_BAD_REQUEST)
 

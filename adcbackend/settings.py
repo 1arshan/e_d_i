@@ -78,7 +78,7 @@ ROOT_URLCONF = 'adcbackend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,8 +107,8 @@ DATABASES = {
         'PORT': DatabaseSecretLocal.port,
     }
 }
-"""
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': DatabaseSecretCloud.engine,
