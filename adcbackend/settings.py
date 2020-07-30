@@ -18,17 +18,17 @@ from kombu.utils.url import safequote
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-aws_access_key = safequote("AKIA5VSMNQIOHBY")
-aws_secret_key = safequote("x4ZbVgb6q2GvALJL+4GqEHV+oN/WdvaV")
+#aws_access_key = safequote("AKIA5VSMNQIOHBY")
+#aws_secret_key = safequote("x4ZbVgb6q2GvALJL+4GqEHV+oN/WdvaV")
 djcelery.setup_loader()
 
-CELERY_TASK_DEFAULT_QUEUE = 'edifi-server5-queque'
-BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@https://sqs.ap-south-1.amazonaws.com/939684365768/edifi-server5-queque".format(
-    aws_access_key=aws_access_key, aws_secret_key=aws_secret_key,
-)
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'region': 'ap-south-1',
-}
+#CELERY_TASK_DEFAULT_QUEUE = 'edifi-server5-queque'
+#BROKER_URL = "sqs://{aws_access_key}:{aws_secret_key}@https://sqs.ap-south-1.amazonaws.com/939684365768/edifi-server5-queque".format(
+ #   aws_access_key=aws_access_key, aws_secret_key=aws_secret_key,
+#)
+#CELERY_BROKER_TRANSPORT_OPTIONS = {
+ #   'region': 'ap-south-1',
+#}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -165,8 +165,8 @@ USE_TZ = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-AWS_ACCESS_KEY_ID = 'AKIA5VSMNQXEBU6IOHBY'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIA5VSMNQXEDXCBGXPD'
+AWS_SECRET_ACCESS_KEY = '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'
 
 AWS_STORAGE_BUCKET_NAME = 'edifi-server5-bucket'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
