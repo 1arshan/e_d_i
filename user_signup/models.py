@@ -72,3 +72,6 @@ class TempTeacher(models.Model):
 class TestingModel(models.Model):
     photo = models.ImageField(upload_to='testing1')
     name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name

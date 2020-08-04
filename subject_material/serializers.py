@@ -2,6 +2,7 @@ from rest_framework import serializers
 from subject_material.models import VideoMaterial, Subject, StandardOrClass, NotesMaterial
 from user_login.serializers import NotesMaterialSerializer
 from rest_framework_simplejwt import settings
+from drf_extra_fields.fields import Base64ImageField
 
 
 class TeacherUploadSerializerGet(serializers.ModelSerializer):
@@ -13,13 +14,8 @@ class TeacherUploadSerializerGet(serializers.ModelSerializer):
         fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
                   'chapter', 'thumbnail', 'id', 'notes_material_link']
 
-    """def create(self, validated_data):
-        notes_material_data = validated_data.pop('notes_material_link')
-        temp = VideoMaterial.objects.create(**validated_data)
-        for x in notes_material_data:
-            NotesMaterial.objects.create(notes_link=temp, **x)
-        return temp
 
+"""
     def update(self, instance, validated_data):
         notes_material_data = validated_data.pop('notes_material_link')
         data = instance.notes_material_link.all()
@@ -48,7 +44,22 @@ class TeacherUploadSerializerGet(serializers.ModelSerializer):
 
 
 class TeacherUploadSerializerPost(serializers.ModelSerializer):
+    thumbnail = Base64ImageField()
+
     class Meta:
         model = VideoMaterial
         fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
                   'chapter', 'thumbnail', 'id']
+
+    def create(self, validated_data):
+        subject_link = validated_data.pop('subject_link')
+        standard_link = validated_data.pop('standard_link')
+        topic = validated_data.pop('topic')
+        description = validated_data.pop('description')
+        video_link = validated_data.pop('video_link')
+        chapter = validated_data.pop('chapter')
+        thumbnail = validated_data.pop('thumbnail')
+        teacher_link = validated_data.pop('teacher_link')
+        return VideoMaterial.objects.create(subject_link=subject_link, standard_link=standard_link, topic=topic,
+                                            description=description, video_link=video_link, chapter=chapter,
+                                            thumbnail=thumbnail,teacher_link=teacher_link)

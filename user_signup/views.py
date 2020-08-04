@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import TempStudent, StudentProfile, TempTeacher, TeacherProfile
+from .models import TempStudent, StudentProfile, TempTeacher, TeacherProfile, TestingModel
 from .serializers import TempStudentSerializer, TempTeacherSerializer, StudentSerializer, TeacherSerializer, \
     TestingModelSerializer
 from datetime import datetime, timezone
@@ -261,14 +261,21 @@ def activate_account(request, uidb64, token, typ):
 
 class TestingView(APIView):
     permission_classes = []
+
     def post(self, request):
-        serializer = TestingModelSerializer(data=request.data)
-        #serializer.
-        imgstring = serializer.initial_data['photo']
-        imgdata = base64.b64decode(imgstring)
-        #filename = 'some_image.jpg'  # I assume you have a way of picking unique filenames
-        #with open(filename, 'wb') as f:
-        serializer.initial_data['photo'] = imgdata
+        data = request.data
+
+        serializer = TestingModelSerializer(data=data)
+        if serializer.is_valid():
+            if serializer.validated_data['photo'] == serializer.initial_data['photo']:
+                serializer.save()
+                return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        data = request.data
+        t = TestingModel.objects.get(pk=data['pk'])
+        serializer = TestingModelSerializer(t, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

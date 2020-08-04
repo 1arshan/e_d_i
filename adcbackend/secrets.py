@@ -34,3 +34,7 @@ class EmailToken:
 class Cloud:
     allowed_host = ['ec2-15-206-67-239.ap-south-1.compute.amazonaws.com', 'localhost', '127.0.0.1'
         , 'ec2-13-126-196-234.ap-south-1.compute.amazonaws.com']
+
+
+class Jwt:
+    signing_key = "h77qfnbmydu9=f0k0o4=$u3&$3lkbhs-oxkpf#@ee6_!l)@ku7"
