@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from subject_material.models import VideoMaterial, Subject, StandardOrClass, NotesMaterial
+from subject_material.models import VideoMaterial
 from user_login.serializers import NotesMaterialSerializer
 from rest_framework_simplejwt import settings
 from drf_extra_fields.fields import Base64ImageField

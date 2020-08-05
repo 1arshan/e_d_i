@@ -18,10 +18,25 @@ class TempTeacherSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
+
     class Meta:
         model = StudentProfile
         fields = ['photo', 'first_name', 'last_name', 'email', 'phone_number', 'standard_or_class'
             , 'pincode', 'email_verified', 'course_field']
+
+    def update(self, instance, validated_data):
+        instance.photo = validated_data.get('photo', instance.photo)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('email', instance.email)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.standard_or_class = validated_data.get('standard_or_class', instance.standard_or_class)
+        instance.pincode = validated_data.get('pincode', instance.pincode)
+        instance.email_verified = validated_data.get('email_verified', instance.email_verified)
+        instance.course_field = validated_data.get('course_field', instance.course_field)
+        instance.save()
+        return instance
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -52,7 +67,7 @@ class TestingModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestingModel
-        fields = ['photo', 'name','pk']
+        fields = ['photo', 'name', 'pk']
 
     def create(self, validated_data):
         photo = validated_data.pop('photo')
