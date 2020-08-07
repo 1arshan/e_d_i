@@ -9,6 +9,7 @@ urlpatterns = [
     path('user/', include('user_signup.urls')),
     path('user_login/', include('user_login.urls')),
     path('study_material/',include('subject_material.urls')),
+    path('app/', include('administration.urls')),
 
     #django inbuild
     path('api-auth/', include('rest_framework.urls')),

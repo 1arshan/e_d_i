@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TeacherVerification, VideoMaterialVerification
+from .models import TeacherVerification, VideoMaterialVerification, CrashReport
 
 
 @admin.register(TeacherVerification)
@@ -18,3 +18,7 @@ class VideoMaterialInline(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = VideoMaterialVerification.objects.filter(is_verified=False)
         return queryset
+
+@admin.register(CrashReport)
+class CrashReportAdmin(admin.ModelAdmin):
+    list_display = ("app_version_code", "app_version_name", 'andriod_version', 'package_name')
