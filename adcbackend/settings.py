@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'subject_material',
     'user_login',
     'administration',
+    'classroom',
 
 ]
 

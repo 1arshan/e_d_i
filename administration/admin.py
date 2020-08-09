@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TeacherVerification, VideoMaterialVerification, CrashReport
+from .models import TeacherVerification, VideoMaterialVerification, CrashReport, InstituteVerification
 
 
 @admin.register(TeacherVerification)
@@ -18,6 +18,16 @@ class VideoMaterialInline(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = VideoMaterialVerification.objects.filter(is_verified=False)
         return queryset
+
+
+@admin.register(InstituteVerification)
+class InstituteInline(admin.ModelAdmin):
+    list_display = ("name", "pincode", 'admin_name', 'is_verified')
+
+    def get_queryset(self, request):
+        queryset = InstituteVerification.objects.filter(is_verified=False)
+        return queryset
+
 
 @admin.register(CrashReport)
 class CrashReportAdmin(admin.ModelAdmin):

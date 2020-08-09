@@ -1,6 +1,7 @@
 from django.db import models
 from user_signup.models import TeacherProfile
 from subject_material.models import VideoMaterial
+from classroom.models import Institute
 
 
 class TeacherVerification(TeacherProfile):
@@ -13,6 +14,11 @@ class VideoMaterialVerification(VideoMaterial):
         proxy = True
 
 
+class InstituteVerification(Institute):
+    class Meta:
+        proxy = True
+
+
 class CrashReport(models.Model):
     app_version_code = models.CharField(max_length=50)
     app_version_name = models.CharField(max_length=50)
@@ -20,4 +26,3 @@ class CrashReport(models.Model):
     package_name = models.CharField(max_length=50)
     build = models.CharField(max_length=50)
     stack_trace = models.TextField()
-
