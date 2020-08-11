@@ -22,7 +22,7 @@ class VideoMaterialInline(admin.ModelAdmin):
 
 @admin.register(InstituteVerification)
 class InstituteInline(admin.ModelAdmin):
-    list_display = ("name", "pincode", 'admin_name', 'is_verified')
+    list_display = ("name", "pincode", 'is_verified')
 
     def get_queryset(self, request):
         queryset = InstituteVerification.objects.filter(is_verified=False)
