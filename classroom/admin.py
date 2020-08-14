@@ -5,6 +5,7 @@ from .models import Institute, InstituteTeacher,Class
 @admin.register(Institute)
 class InstituteAdmin(admin.ModelAdmin):
     list_display = ("name", "pincode", 'is_verified')
+    readonly_fields = ('pk',)
 
 
 @admin.register(InstituteTeacher)

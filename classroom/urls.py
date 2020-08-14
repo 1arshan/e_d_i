@@ -7,7 +7,10 @@ urlpatterns = [
     #give institute_link of institute,pk for pk of techer profile
     path('institute/teacher/assosicated/', views.InstituteTeacherAssosiatedView.as_view(), name='institute_teacehr'),
     #intiute_info
-    path('institute/class/<str:inst>/', views.ClassView.as_view(), name='class'),#classes
+    path('institute/class/',views.ClassView.as_view(), name='class'),#classes,pk of institute
+    path('institute/class/admin/',views.ClassAdminView.as_view(), name='admin_class'),#classes,pk of institute for admin only
+
+    path('assingment/',views.AssingmentView.as_view(), name='assingment'),#teacher to give assingment
     path('institute/others/', views.InstituteOtherView.as_view(), name='institute_other'),
     #for anybody
 

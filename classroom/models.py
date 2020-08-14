@@ -22,15 +22,15 @@ class InstituteTeacher(models.Model):
 
 
 class Class(models.Model):
-    code = models.CharField(max_length=10)
-    standard_or_class = models.CharField(max_length=10,default="null")
+    code = models.CharField(max_length=10,unique=True)
+    standard_or_class = models.CharField(max_length=10, default="null")
     subject = models.CharField(max_length=30)
     teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.DO_NOTHING)
     institute_link = models.ForeignKey(Institute, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank=True)
+    name = models.CharField(max_length=20)
 
 
-"""
 def renaming_uploaded_file1(instance, filename):
     return "institute/" + str(instance.class_link) + "/assignment/" + filename
 
@@ -40,13 +40,14 @@ def renaming_uploaded_file2(instance, filename):
 
 
 class Assignment(models.Model):
-    class_link = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='code')
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE)
     given_datetime = models.DateField(auto_now_add=True)
     end_datetime = models.DateField()
     file = models.FileField(upload_to=renaming_uploaded_file1)
     description = models.CharField(max_length=256, blank=True)
 
 
+"""
 class AssignmentSubmission(models.Model):
     assignment_link = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     submission_datetime = models.DateField(auto_now_add=True)
