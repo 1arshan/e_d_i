@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from .models import Institute, InstituteTeacher, Class
-from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, InstituteAssosiatedSerializer
+from .models import Institute, InstituteTeacher, Class, Assignment
+from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, \
+    InstituteAssosiatedSerializer, AssingmentSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,12 +9,13 @@ from user_signup.models import TeacherProfile
 from rest_framework.permissions import IsAuthenticated
 import random
 import string
+from rest_framework.permissions import BasePermission
 
 
 # ----------get,post,put,patch of institute-------->>>>>>>>
 # ----------to Do remove admin_link
 
-class InstituteView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+class InstituteView(generics.ListCreateAPIView, generics.UpdateAPIView):
     serializer_class = InstituteSerializer
 
     def get_queryset(self):
@@ -101,9 +103,11 @@ class InstituteTeacherView(generics.ListCreateAPIView, generics.UpdateAPIView):
             return Response(x, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
+    """def delete(self, request):
         institue_link = self.permission()
         pk = self.request.GET['pk']
+        Institute.objects.get(pk=pk,in)
+"""
 
 
 def get_random_alphanumeric_string():
@@ -164,7 +168,7 @@ class ClassView(generics.ListCreateAPIView, generics.UpdateAPIView):
         try:
             t = Class.objects.get(pk=pk, teacher_link=teacher_link)
         except Exception:
-            return Response("error", status=status.HTTP_400_BAD_REQUEST)
+            raise PermissionError
         serializer = self.serializer_class(t, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -217,18 +221,130 @@ class ClassAdminView(generics.ListCreateAPIView, generics.UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class AssingmentView(generics.ListCreateAPIView, generics.UpdateAPIView):
-    pass
+# ----serializer validation and saving----->>>>
+def serializer_validation_and_saving(self):
+    serializer = self.serializer_class(data=self.request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return True
+    return serializer.errors
+
+
+"""
+# ----serializer validation and updation----->>>>
+def serializer_validation_and_update(self,request):
+    serializer = self.serializer_class(t, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return 1
+    return serializer.errors
+"""
+
+
+# ----For normal teacher---->>>>>
+class Perm2(BasePermission):
+    def has_permission(self, request, view):
+        username = request.user.username
+        class_link = request.GET['class_link']
+        try:
+            if Class.objects.get(pk=class_link, teacher_link=username):
+                return True
+            else:
+                raise PermissionError
+        except Exception:
+            raise PermissionError
+
+
+# ----class link is must ie.. PK of classs,---->>>>>
+# ---for update pk is also required---------->>>>
+class AssingmentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+    serializer_class = AssingmentSerializer
+    permission_classes = [IsAuthenticated, Perm2]
+    """def permission(self):
+        username = self.request.user.username
+        class_link = self.request.GET['class_link']
+        try:
+            if Class.objects.get(pk=class_link, teacher_link=username):
+                return class_link
+            else:
+                raise PermissionError
+        except Exception:
+            raise PermissionError
+"""
+
+    def get_queryset(self):
+        username = self.request.user.username
+        class_link = self.request.GET['class_link']
+        return Assignment.objects.filter(class_link=class_link, class_link__teacher_link=username)
+
+    def create(self, request, *args, **kwargs):
+        class_link = self.request.GET['class_link']
+        data = request.data
+        data['class_link'] = class_link
+        x = {"msg": "Assinment Save"}
+        response = serializer_validation_and_saving(self)
+        if response == 1:
+            return Response(x, status=status.HTTP_201_CREATED)
+        else:
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        class_link = self.request.GET['class_link']
+        pk = self.request.GET['pk']
+        try:
+            t = Assignment.objects.get(pk=pk, class_link=class_link)
+        except Exception:
+            raise PermissionError
+        serializer = self.serializer_class(t, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            x = {"msg": "Assignment Updated"}
+            return Response(x, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ----For admin teacher----------->>>>>>>>>>
+# ---Permission ---->>>>
+class Perm1(BasePermission):
+    def has_permission(self, request, view):
+        username = request.user.username
+        class_link = request.GET['class_link']
+        try:
+            institute_link = Class.objects.get(pk=class_link).institute_link
+            if InstituteTeacher.objects.get(teacher_link=username, institute_link=institute_link).administrative_right:
+                return True
+            else:
+                raise PermissionError
+        except Exception:
+            raise PermissionError
+
+
+# -----class_link is must ie PK of classes------>>>>>>
+# ------for update pk is also required-------->>>>>>
+class AssingmentAdminView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+    serializer_class = AssingmentSerializer
+    permission_classes = [IsAuthenticated, Perm1]
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        return Assignment.objects.filter(class_link=class_link)
+
+    def create(self, request, *args, **kwargs):
+        response = AssingmentView.create(self, request, *args, **kwargs)
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = AssingmentView.update(self, request, *args, **kwargs)
+        return response
 
 
 # -----just for info for teacher to know to which all institute they are assosiated with-->>>
 class InstituteTeacherAssosiatedView(generics.ListAPIView):
     serializer_class = InstituteAssosiatedSerializer
-    #serializer_class = InstituteSerializer
+
     def get_queryset(self):
         username = self.request.user.username
-        t = InstituteTeacher.objects.filter(teacher_link=username).values('institute_link','administrative_right')
-        #t = InstituteTeacher.objects.filter(teacher_link=username).values('institute_link','administrative_right')
+        t = InstituteTeacher.objects.filter(teacher_link=username).values('institute_link', 'administrative_right')
         y = []
         z = []
         for x in t:
@@ -250,3 +366,5 @@ class InstituteOtherView(generics.ListAPIView):
 
     def get_queryset(self):
         return Institute.objects.filter(pk=self.request.GET['pk'])
+
+# ---teacer see all teacher assosiated with institurte

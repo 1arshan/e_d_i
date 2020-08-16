@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Institute, InstituteTeacher,Class
+from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach
 
 
 @admin.register(Institute)
@@ -15,4 +15,17 @@ class InstituteTeacherAdmin(admin.ModelAdmin):
 
 @admin.register(Class)
 class ClassAdmin(admin.ModelAdmin):
-    list_display = ("code", "standard_or_class",'subject', 'teacher_link','institute_link')
+    list_display = ("code", "standard_or_class", 'name', 'teacher_link', 'institute_link', 'pk')
+    readonly_fields = ('pk',)
+
+
+@admin.register(Assignment)
+class AssingmentAdmin(admin.ModelAdmin):
+    list_display = ("class_link", "pk")
+    readonly_fields = ('pk',)
+
+
+@admin.register(StudentAttach)
+class StudentAttachAdmin(admin.ModelAdmin):
+    list_display = ("class_link", 'student_link', "pk")
+    readonly_fields = ('pk',)

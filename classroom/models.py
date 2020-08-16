@@ -1,5 +1,5 @@
 from django.db import models
-from user_signup.models import TeacherProfile
+from user_signup.models import TeacherProfile, StudentProfile
 
 
 class Institute(models.Model):
@@ -22,13 +22,16 @@ class InstituteTeacher(models.Model):
 
 
 class Class(models.Model):
-    code = models.CharField(max_length=10,unique=True)
+    code = models.CharField(max_length=10, unique=True)
     standard_or_class = models.CharField(max_length=10, default="null")
-    subject = models.CharField(max_length=30)
+    # = models.CharField(max_length=30)
     teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.DO_NOTHING)
     institute_link = models.ForeignKey(Institute, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank=True)
     name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f'{self.code}'
 
 
 def renaming_uploaded_file1(instance, filename):
@@ -41,10 +44,21 @@ def renaming_uploaded_file2(instance, filename):
 
 class Assignment(models.Model):
     class_link = models.ForeignKey(Class, on_delete=models.CASCADE)
-    given_datetime = models.DateField(auto_now_add=True)
-    end_datetime = models.DateField()
+    given_datetime = models.DateTimeField(auto_now_add=True)
+    end_datetime = models.DateTimeField()
     file = models.FileField(upload_to=renaming_uploaded_file1)
     description = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return str(self.class_link)
+
+
+class StudentAttach(models.Model):
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE)
+    student_link = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.class_link)
 
 
 """

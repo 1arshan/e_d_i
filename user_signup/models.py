@@ -21,6 +21,9 @@ class StudentProfile(models.Model):
     phone_number = models.CharField(max_length=13, unique=True, primary_key=True)
     course_field = models.CharField(max_length=20, blank=True, default='no_field')
 
+    def __str__(self):
+        return self.phone_number
+
 
 class TeacherProfile(models.Model):
     photo = models.ImageField(upload_to=renaming_uploaded_file1, blank=True)

@@ -14,7 +14,7 @@ class InstituteAssosiatedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Institute
-        fields = ['name', 'pincode', 'address', 'is_verified', 'pk', 'administrative_right']
+        fields = ['name', 'pincode', 'address', 'is_verified', 'id', 'administrative_right']
 
 
 class InstituteTeacherSerializer(serializers.ModelSerializer):
@@ -32,4 +32,5 @@ class ClassSerializer(serializers.ModelSerializer):
 class AssingmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
-        fields = ['class_link', 'given_datetime', 'end_datetime', 'file', 'description']
+        fields = ['class_link', 'given_datetime', 'end_datetime', 'file', 'description', 'pk']
+
