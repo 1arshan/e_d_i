@@ -43,28 +43,27 @@ def renaming_uploaded_file2(instance, filename):
 
 
 class Assignment(models.Model):
-    class_link = models.ForeignKey(Class, on_delete=models.CASCADE)
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE,to_field='id')
     given_datetime = models.DateTimeField(auto_now_add=True)
     end_datetime = models.DateTimeField()
     file = models.FileField(upload_to=renaming_uploaded_file1)
     description = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
-        return str(self.class_link)
+        return f'Assignmnet link:{str(self.pk)} ; class link:{self.class_link}'
 
 
 class StudentAttach(models.Model):
-    class_link = models.ForeignKey(Class, on_delete=models.CASCADE)
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE,to_field='id')
     student_link = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.class_link)
 
 
-"""
 class AssignmentSubmission(models.Model):
     assignment_link = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    submission_datetime = models.DateField(auto_now_add=True)
+    submission_datetime = models.DateTimeField(auto_now_add=True)
     time_remark = models.BooleanField(default=False)  # if on time then True
     ans_file = models.FileField(upload_to=renaming_uploaded_file2)
-"""
+    student_link=models.ForeignKey(StudentProfile,on_delete=models.DO_NOTHING)

@@ -12,10 +12,20 @@ urlpatterns = [
     path('assingment/',views.AssingmentView.as_view(), name='assingment'),#teacher to give assingment
     path('assingment/admin/',views.AssingmentAdminView.as_view(), name='admin_assingment'),#Admin to oversee all classes
 
+    path('assingment/submitted/', views.AssingmentSubmittedView.as_view(), name='t-ass-sub'),
+    #tacher to see assignment submitted in a class
+    path('assingment/admin/submitted/', views.AssingmentAdminSubmittedView.as_view(), name='ad-ass-sub'),
+    #tacher to see assignment submitted in a class
+
+
+
     path('institute/others/', views.InstituteOtherView.as_view(), name='institute_other'),
     #for anybody
 
+
     #--student----->>>>>
     path('student/', views2.StudentClassView.as_view(), name='studetn_class'),
-    path('student/assignment/submission', views2.StudentAssignmentView.as_view(), name='submission'),
+    path('student/assignment/', views2.StudentAssignmentView.as_view(), name='studnet_assng'),
+    path('student/assignment/submission/', views2.StudentAssignmentSubmissionView.as_view(), name='submission'),
+
 ]

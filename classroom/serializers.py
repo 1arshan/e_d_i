@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
-from .models import Institute, InstituteTeacher, Class, Assignment
+from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission
 
 
 class InstituteSerializer(serializers.ModelSerializer):
@@ -34,3 +34,8 @@ class AssingmentSerializer(serializers.ModelSerializer):
         model = Assignment
         fields = ['class_link', 'given_datetime', 'end_datetime', 'file', 'description', 'pk']
 
+
+class AssingmentSubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssignmentSubmission
+        fields = ['assignment_link', 'submission_datetime', 'time_remark', 'ans_file', 'pk','student_link']

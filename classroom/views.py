@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Institute, InstituteTeacher, Class, Assignment
+from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission
 from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, \
-    InstituteAssosiatedSerializer, AssingmentSerializer
+    InstituteAssosiatedSerializer, AssingmentSerializer, AssingmentSubmissionSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -367,4 +367,28 @@ class InstituteOtherView(generics.ListAPIView):
     def get_queryset(self):
         return Institute.objects.filter(pk=self.request.GET['pk'])
 
-# ---teacer see all teacher assosiated with institurte
+
+#  To DO ---teacer see all teacher assosiated with institurte
+
+
+# ------For  Teacher----->>>>
+# ------Teacher to see assign submitted----->>>>
+class AssingmentSubmittedView(generics.ListAPIView):
+    serializer_class = AssingmentSubmissionSerializer
+
+    def get_queryset(self):
+        assingmnet_link = self.request.GET['assingmnet_link']
+        class_link = self.request.GET['class_link']
+        return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link,assignment_link__class_link=class_link)
+
+
+# ----For admin----->>>
+# ---admin to see assignment submitted ----->>>>>
+# ---class_link,ass_link
+class AssingmentAdminSubmittedView(generics.ListAPIView):
+    serializer_class = AssingmentSubmissionSerializer
+    permission_classes = [IsAuthenticated, Perm1]
+
+    def get_queryset(self):
+        assingmnet_link = self.request.GET['assingmnet_link']
+        return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link)

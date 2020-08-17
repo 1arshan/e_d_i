@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach
+from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach,AssignmentSubmission
 
 
 @admin.register(Institute)
@@ -29,3 +29,9 @@ class AssingmentAdmin(admin.ModelAdmin):
 class StudentAttachAdmin(admin.ModelAdmin):
     list_display = ("class_link", 'student_link', "pk")
     readonly_fields = ('pk',)
+
+
+@admin.register(AssignmentSubmission)
+class AssignmentSubmissionAdmin(admin.ModelAdmin):
+    list_display = ("assignment_link", 'time_remark','student_link', "pk")
+    readonly_fields = ('pk','submission_datetime')
