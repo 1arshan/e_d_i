@@ -1,3 +1,4 @@
+#----Add video material
 from locust import HttpUser, TaskSet, task
 # from locust import ResponseError
 import json
@@ -42,28 +43,45 @@ import random
 from locust import HttpUser, task, between
 import string
 
+"""
+def get_random_alphanumeric_string():
+    letters_and_digits = string.ascii_letters + string.digits
+    result_str = ''.join((random.choice(letters_and_digits) for i in range(6)))
+    return result_str
+"""
 
 class QuickstartUser(HttpUser):
     wait_time = between(0, 1)
-    freq =0
+    freq = 0
+
+    def __init__(self, parent):
+        super(QuickstartUser, self).__init__(parent)
+        self.token = ""
+        self.headers = {}
+
     @task
     def index_page(self):
-        self.freq=self.freq+1
+        self.freq = self.freq + 1
         print(self.freq)
 
 
     def on_start(self):
-        subject_link = random.choice(string.ascii_letters[0:6])
-        last_name = random.choice(string.ascii_letters[0:6])
-        phone_number = str(random.randrange(10101, 909090))
-        email = "testarshanahmad@gmail.com"
-        standard_or_class = str(random.randrange(1, 12))
-        password = "palindrome"
-        pincode = str(random.randrange(10101, 90909))
-        self.client.post("/user/signup/s/", {"first_name": first_name, "last_name": last_name,
-                                             "phone_number": phone_number, "email": email,
-                                             "standard_or_class": standard_or_class, "password": password,
-                                             "pincode": pincode})
+        #self.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" \
+                   #  ".eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTk3ODY3ODk0LCJqdGkiOi" \
+                    # "JkMjE2OTAxNTYxNDc0NjFjYTE0NGZlNmU2NWZmODQ0NiIsInVzZXJfaWQiOjIwMzV9.mwzswF65fpZCghqWih" \
+                    # "-gRYprkycfI8F" \
+                    # "ULjGaeHNYJXo"
+        #self.headers = {'Authorization': 'Bearer {}'.format(self.token)}
+
+        subject_link = random.choice(["Physics", "Biology", "Mathematics", "Biology", "Science"])
+        standard_link = str(random.randrange(1, 12))
+        topic = random.choice(["T1", "T2", "T3", "T4", "T5"])
+        video_link = "https://www.youtube.com/watch?v=j1ErIiGqwGg"
+        chapter = random.choice(["Ch1", "Ch2", "Ch3", "Ch4", "Ch5"])
+
+        self.client.post("/user_login/chapter/t/", {"subject_link": subject_link, "standard_link": standard_link,
+                                                    "topic": topic, "video_link": video_link,
+                                                    "chapter": chapter})
 
 # "first_name":"arshan",
 # "last_name":"agfsdl",

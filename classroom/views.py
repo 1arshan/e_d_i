@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission
 from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, \
-    InstituteAssosiatedSerializer, AssingmentSerializer, AssingmentSubmissionSerializer
+    InstituteAssosiatedSerializer, AssingmentSerializer, AssingmentSubmissionSerializer, InstituteTeacherInfoSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -83,9 +83,16 @@ class InstituteTeacherView(generics.ListCreateAPIView, generics.UpdateAPIView):
         self.permission()
         serializer = self.serializer_class(data=self.request.data)
         if serializer.is_valid():
-            serializer.save()
-            x = {"msg": "teacher save"}
-            return Response(x, status=status.HTTP_201_CREATED)
+            t = serializer.validated_data['teacher_link']
+            if InstituteTeacher.objects.filter(teacher_link=t,
+                                               institute_link=serializer.validated_data['institute_link']).exists():
+                x = {"msg": "teacher already added"}
+                return Response(x, status=status.HTTP_400_BAD_REQUEST)
+            if self.request.GET['institute_link'] ==serializer.validated_data['institute_link']:
+                serializer.save()
+                x = {"msg": "teacher save"}
+                return Response(x, status=status.HTTP_201_CREATED)
+            raise PermissionError
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # ----to update techher profile---->>>>>>>
@@ -136,7 +143,8 @@ class ClassView(generics.ListCreateAPIView, generics.UpdateAPIView):
             # return Response(x, status=status.HTTP_403_FORBIDDEN)
 
     def get_queryset(self):
-        username = self.request.user.username
+        user = self.request.user
+        username = user.username
         institute_link = self.request.GET['institute_link']
         return Class.objects.filter(teacher_link=username, institute_link=institute_link)
 
@@ -153,10 +161,12 @@ class ClassView(generics.ListCreateAPIView, generics.UpdateAPIView):
 
         data = self.request.data
         data['code'] = result_str
-        data["teacher_link"] = teacher_link
+        # data["teacher_link"] = teacher_link
+        teacher_link = TeacherProfile.objects.get(phone_number=teacher_link)
         data["institute_link"] = self.request.GET['institute_link']
         serializer = self.serializer_class(data=self.request.data)
         if serializer.is_valid():
+            serializer.validated_data["teacher_link"] = teacher_link
             serializer.save()
             x = {"msg": "class created"}
             return Response(x, status=status.HTTP_201_CREATED)
@@ -379,7 +389,8 @@ class AssingmentSubmittedView(generics.ListAPIView):
     def get_queryset(self):
         assingmnet_link = self.request.GET['assingmnet_link']
         class_link = self.request.GET['class_link']
-        return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link,assignment_link__class_link=class_link)
+        return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link,
+                                                   assignment_link__class_link=class_link)
 
 
 # ----For admin----->>>
@@ -392,3 +403,18 @@ class AssingmentAdminSubmittedView(generics.ListAPIView):
     def get_queryset(self):
         assingmnet_link = self.request.GET['assingmnet_link']
         return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link)
+
+
+# ----For non admin
+# ----need institute_link------>>>>
+class InstituteTeacherInfoView(generics.ListAPIView):
+    serializer_class = InstituteTeacherInfoSerializer
+
+    def get_queryset(self):
+        institute_link = self.request.GET['institute_link']
+        username = self.request.user.username
+        try:
+            InstituteTeacher.objects.get(institute_link=institute_link, teacher_link=username)
+            return InstituteTeacher.objects.filter(institute_link=institute_link)
+        except Exception:
+            raise PermissionError

@@ -43,8 +43,15 @@ from locust import HttpUser, task, between
 import string
 
 
+
+def get_random_alphanumeric_string():
+    letters_and_digits = string.ascii_letters + string.digits
+    result_str = ''.join((random.choice(letters_and_digits) for i in range(6)))
+    return result_str
+
+
 class QuickstartUser(HttpUser):
-    wait_time = between(0, 1)
+    #wait_time = between(1, 2)
     freq =0
     @task
     def index_page(self):
@@ -57,8 +64,8 @@ class QuickstartUser(HttpUser):
 """
 
     def on_start(self):
-        first_name = random.choice(string.ascii_letters[0:6])
-        last_name = random.choice(string.ascii_letters[0:6])
+        first_name = get_random_alphanumeric_string()
+        last_name = get_random_alphanumeric_string()
         phone_number = str(random.randrange(10101, 909090))
         email = "testarshanahmad@gmail.com"
         standard_or_class = str(random.randrange(1, 12))

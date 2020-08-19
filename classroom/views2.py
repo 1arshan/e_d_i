@@ -60,7 +60,7 @@ class StudentAssignmentView(generics.ListAPIView):
 class Perm1(BasePermission):
     def has_permission(self, request, view):
         username = request.user.username
-        assignment_link = request.GET['assingment_link']
+        #assignment_link = request.GET['assignment_link']
         try:
 
             class_link = request.GET['class_link']
@@ -77,7 +77,7 @@ class StudentAssignmentSubmissionView(generics.ListCreateAPIView, generics.Updat
 
     def get_queryset(self):
         username = self.request.user.username
-        assingmnet_link = self.request.GET['assingment_link']
+        assingmnet_link = self.request.GET['assignment_link']
         return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link, student_link=username)
 
     def create(self, request, *args, **kwargs):

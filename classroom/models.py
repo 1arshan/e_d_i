@@ -16,6 +16,7 @@ class InstituteTeacher(models.Model):
     teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE)
     institute_link = models.ForeignKey(Institute, on_delete=models.CASCADE)
     administrative_right = models.BooleanField(default=False)
+    teacher_name = models.CharField(max_length=25, blank=True)
 
     def __str__(self):
         return f'Teacher: {self.teacher_link}; Institute: {self.institute_link}'
@@ -29,6 +30,7 @@ class Class(models.Model):
     institute_link = models.ForeignKey(Institute, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank=True)
     name = models.CharField(max_length=20)
+    teacher_name = models.CharField(max_length=25, blank=True)
 
     def __str__(self):
         return f'{self.code}'
@@ -43,7 +45,7 @@ def renaming_uploaded_file2(instance, filename):
 
 
 class Assignment(models.Model):
-    class_link = models.ForeignKey(Class, on_delete=models.CASCADE,to_field='id')
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE, to_field='id')
     given_datetime = models.DateTimeField(auto_now_add=True)
     end_datetime = models.DateTimeField()
     file = models.FileField(upload_to=renaming_uploaded_file1)
@@ -54,7 +56,7 @@ class Assignment(models.Model):
 
 
 class StudentAttach(models.Model):
-    class_link = models.ForeignKey(Class, on_delete=models.CASCADE,to_field='id')
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE, to_field='id')
     student_link = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -66,4 +68,5 @@ class AssignmentSubmission(models.Model):
     submission_datetime = models.DateTimeField(auto_now_add=True)
     time_remark = models.BooleanField(default=False)  # if on time then True
     ans_file = models.FileField(upload_to=renaming_uploaded_file2)
-    student_link=models.ForeignKey(StudentProfile,on_delete=models.DO_NOTHING)
+    student_link = models.ForeignKey(StudentProfile, on_delete=models.DO_NOTHING)
+    student_name = models.CharField(max_length=25, blank=True)

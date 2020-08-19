@@ -4,7 +4,7 @@ from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttac
 
 @admin.register(Institute)
 class InstituteAdmin(admin.ModelAdmin):
-    list_display = ("name", "pincode", 'is_verified')
+    list_display = ("name", "pincode", 'is_verified','pk')
     readonly_fields = ('pk',)
 
 
