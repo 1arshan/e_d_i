@@ -33,11 +33,12 @@ class QuickstartUser(HttpUser):
         # "ULjGaeHNYJXo"
         # self.headers = {'Authorization': 'Bearer {}'.format(self.token)}
 
-        subject_link = random.choice(["Physics", "Biology", "Mathematics", "Biology", "Science"])
-        standard_link = str(random.randrange(1, 12))
+        standard_link = random.choice(["Physics", "Biology", "Mathematics", "Biology", "Science"])
+        subject_link = str(random.randrange(1, 12))
         # topic = random.choice(["T1", "T2", "T3", "T4", "T5"])
         # video_link = "https://www.youtube.com/watch?v=j1ErIiGqwGg"
-        chapter = random.choice(["Ch1", "Ch2", "Ch3", "Ch4", "Ch5"])
+        #chapter = random.choice(["Ch1", "Ch2", "Ch3", "Ch4", "Ch5"])
         # teacher_link = "55"
-        self.client.get("/user/testing/", {"subject_link": subject_link, "standard_link": standard_link,
-                                           "chapter": chapter})
+        self.client.get("/user/testing/", {"subject_link": subject_link, "standard_link": standard_link
+            })
+#, "chapter": chapter

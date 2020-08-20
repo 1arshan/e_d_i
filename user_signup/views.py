@@ -259,14 +259,32 @@ def activate_account(request, uidb64, token, typ):
     else:
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
 
-
+"""
 class TestingView(generics.ListCreateAPIView):
     permission_classes = []
     serializer_class = TestingModelSerializer
-    queryset = VideoMaterial.objects.all()
+
+    # queryset = VideoMaterial.objects.all()
 
     def get_queryset(self):
         data = self.request.data
-        return VideoMaterial.objects.filter(standard_link=data['standard_or_class'],
-                                            subject_link=data['subject'],
+        return VideoMaterial.objects.filter(standard_link=data['standard_link'],
+                                            subject_link=data['subject_link'],
                                             chapter=data['chapter'])
+
+    def create(self, request, *args, **kwargs):
+        data = self.request.data
+        print(data)
+        return Response("dsds")
+"""
+
+class TestingView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        data = self.request.data
+        x =VideoMaterial.objects.filter(standard_link=data['standard_link'],subject_link=data['subject_link'],
+                                        chapter=data['chapter'])
+        serializer = TestingModelSerializer(x,many=True)
+        return Response(serializer.data)
+
