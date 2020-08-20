@@ -1,4 +1,4 @@
-#----Add video material
+# ----Add video material
 from locust import HttpUser, TaskSet, task
 # from locust import ResponseError
 import json
@@ -50,6 +50,7 @@ def get_random_alphanumeric_string():
     return result_str
 """
 
+
 class QuickstartUser(HttpUser):
     wait_time = between(0, 1)
     freq = 0
@@ -64,24 +65,23 @@ class QuickstartUser(HttpUser):
         self.freq = self.freq + 1
         print(self.freq)
 
-
     def on_start(self):
-        #self.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" \
-                   #  ".eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTk3ODY3ODk0LCJqdGkiOi" \
-                    # "JkMjE2OTAxNTYxNDc0NjFjYTE0NGZlNmU2NWZmODQ0NiIsInVzZXJfaWQiOjIwMzV9.mwzswF65fpZCghqWih" \
-                    # "-gRYprkycfI8F" \
-                    # "ULjGaeHNYJXo"
-        #self.headers = {'Authorization': 'Bearer {}'.format(self.token)}
+        # self.token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" \
+        #  ".eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTk3ODY3ODk0LCJqdGkiOi" \
+        # "JkMjE2OTAxNTYxNDc0NjFjYTE0NGZlNmU2NWZmODQ0NiIsInVzZXJfaWQiOjIwMzV9.mwzswF65fpZCghqWih" \
+        # "-gRYprkycfI8F" \
+        # "ULjGaeHNYJXo"
+        # self.headers = {'Authorization': 'Bearer {}'.format(self.token)}
 
         subject_link = random.choice(["Physics", "Biology", "Mathematics", "Biology", "Science"])
         standard_link = str(random.randrange(1, 12))
         topic = random.choice(["T1", "T2", "T3", "T4", "T5"])
         video_link = "https://www.youtube.com/watch?v=j1ErIiGqwGg"
         chapter = random.choice(["Ch1", "Ch2", "Ch3", "Ch4", "Ch5"])
-
-        self.client.post("/user_login/chapter/t/", {"subject_link": subject_link, "standard_link": standard_link,
-                                                    "topic": topic, "video_link": video_link,
-                                                    "chapter": chapter})
+        teacher_link = "55"
+        self.client.post("/user/testing/", {"subject_link": subject_link, "standard_link": standard_link,
+                                            "topic": topic, "video_link": video_link,
+                                            "chapter": chapter, "teacher_link": teacher_link})
 
 # "first_name":"arshan",
 # "last_name":"agfsdl",

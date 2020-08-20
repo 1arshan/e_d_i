@@ -51,7 +51,7 @@ def get_random_alphanumeric_string():
 
 
 class QuickstartUser(HttpUser):
-    #wait_time = between(1, 2)
+    wait_time = between(1, 2)
     freq =0
     @task
     def index_page(self):
@@ -67,7 +67,7 @@ class QuickstartUser(HttpUser):
         first_name = get_random_alphanumeric_string()
         last_name = get_random_alphanumeric_string()
         phone_number = str(random.randrange(10101, 909090))
-        email = "testarshanahmad@gmail.com"
+        email = "1testarshanahmad@gmail.com"
         standard_or_class = str(random.randrange(1, 12))
         password = "palindrome"
         pincode = str(random.randrange(10101, 90909))

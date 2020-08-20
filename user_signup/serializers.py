@@ -1,6 +1,7 @@
 from .models import TempStudent, TempTeacher, StudentProfile, TeacherProfile, TestingModel
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
+from subject_material.models import VideoMaterial
 
 
 class TempStudentSerializer(serializers.ModelSerializer):
@@ -63,19 +64,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 
 class TestingModelSerializer(serializers.ModelSerializer):
-    photo = Base64ImageField()
-
     class Meta:
-        model = TestingModel
-        fields = ['photo', 'name', 'pk']
-
-    def create(self, validated_data):
-        photo = validated_data.pop('photo')
-        name = validated_data.pop('name')
-        return TestingModel.objects.create(name=name, photo=photo)
-
-    def update(self, instance, validated_data):
-        instance.photo = validated_data.get('photo', instance.photo)
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
+        model = VideoMaterial
+        fields = ['subject_link', 'standard_link', 'topic', 'description', 'video_link',
+                  'chapter', 'teacher_link']

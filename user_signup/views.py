@@ -15,6 +15,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 from django.contrib.auth.models import Group
+from subject_material.models import VideoMaterial
 from .tasks import send_parallel_sms, send_parallel_mail
 import random
 import base64
@@ -259,24 +260,7 @@ def activate_account(request, uidb64, token, typ):
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
 
 
-class TestingView(APIView):
+class TestingView(generics.ListCreateAPIView):
     permission_classes = []
-
-    def post(self, request):
-        data = request.data
-
-        serializer = TestingModelSerializer(data=data)
-        if serializer.is_valid():
-            if serializer.validated_data['photo'] == serializer.initial_data['photo']:
-                serializer.save()
-                return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request):
-        data = request.data
-        t = TestingModel.objects.get(pk=data['pk'])
-        serializer = TestingModelSerializer(t, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer_class = TestingModelSerializer
+    queryset = VideoMaterial.objects.all()

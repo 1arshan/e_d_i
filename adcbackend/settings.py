@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'adcbackend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
+"""
 try:
     DATABASES = {
         'default': {
@@ -109,15 +109,15 @@ try:
         }
     }
 
-except Exception:
-    DATABASES = {
-        'default': {
-            'ENGINE': DatabaseSecretCloud.engine,
-            'NAME': DatabaseSecretCloud.name,
-            'USER': DatabaseSecretCloud.user,
-            'PASSWORD': DatabaseSecretCloud.password,
-            'HOST': DatabaseSecretCloud.host,
-            'PORT': DatabaseSecretCloud.port,
+except Exception:"""
+DATABASES = {
+    'default': {
+        'ENGINE': DatabaseSecretCloud.engine,
+        'NAME': DatabaseSecretCloud.name,
+        'USER': DatabaseSecretCloud.user,
+        'PASSWORD': DatabaseSecretCloud.password,
+        'HOST': DatabaseSecretCloud.host,
+        'PORT': DatabaseSecretCloud.port,
         }
     }
 
