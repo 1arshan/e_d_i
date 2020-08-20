@@ -96,20 +96,20 @@ WSGI_APPLICATION = 'adcbackend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-"""
-try:
-    DATABASES = {
-        'default': {
-            'ENGINE': DatabaseSecretLocal.engine,
-            'NAME': DatabaseSecretLocal.name,
-            'USER': DatabaseSecretLocal.user,
-            'PASSWORD': DatabaseSecretLocal.password,
-            'HOST': DatabaseSecretLocal.host,
-            'PORT': DatabaseSecretLocal.port,
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': DatabaseSecretLocal.engine,
+        'NAME': DatabaseSecretLocal.name,
+        'USER': DatabaseSecretLocal.user,
+        'PASSWORD': DatabaseSecretLocal.password,
+        'HOST': DatabaseSecretLocal.host,
+        'PORT': DatabaseSecretLocal.port,
         }
     }
 
-except Exception:"""
+"""
 DATABASES = {
     'default': {
         'ENGINE': DatabaseSecretCloud.engine,
@@ -120,7 +120,7 @@ DATABASES = {
         'PORT': DatabaseSecretCloud.port,
         }
     }
-
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

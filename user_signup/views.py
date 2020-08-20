@@ -264,3 +264,9 @@ class TestingView(generics.ListCreateAPIView):
     permission_classes = []
     serializer_class = TestingModelSerializer
     queryset = VideoMaterial.objects.all()
+
+    def get_queryset(self):
+        data = self.request.data
+        return VideoMaterial.objects.filter(standard_link=data['standard_or_class'],
+                                            subject_link=data['subject'],
+                                            chapter=data['chapter'])
