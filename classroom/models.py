@@ -33,7 +33,7 @@ class Class(models.Model):
     teacher_name = models.CharField(max_length=25, blank=True)
 
     def __str__(self):
-        return f'{self.code}'
+        return f'Class Code :{self.code} Teacher name: {self.teacher_name}'
 
 
 def renaming_uploaded_file1(instance, filename):
@@ -58,6 +58,7 @@ class Assignment(models.Model):
 class StudentAttach(models.Model):
     class_link = models.ForeignKey(Class, on_delete=models.CASCADE, to_field='id')
     student_link = models.ForeignKey(StudentProfile, on_delete=models.CASCADE)
+    student_name = models.CharField(max_length=25, blank=True)
 
     def __str__(self):
         return str(self.class_link)

@@ -13,6 +13,8 @@ urlpatterns = [
     path('institute/class/admin/', views.ClassAdminView.as_view(), name='admin_class'),
     # classes,pk of institute for admin only
 
+    path('teacher/student/', views.TeacherStudentView.as_view(), name='t-s'),
+    # teacehr to see student in the class
     path('assingment/', views.AssingmentView.as_view(), name='assingment'),  # teacher to give assingment
     path('assingment/admin/', views.AssingmentAdminView.as_view(), name='admin_assingment'),
     # Admin to oversee all classes
@@ -27,6 +29,7 @@ urlpatterns = [
 
     # --student----->>>>>
     path('student/', views2.StudentClassView.as_view(), name='studetn_class'),
+    path('student/classmate/', views2.StudentClassmateView.as_view(), name='studetn_classmate'),
     path('student/assignment/', views2.StudentAssignmentView.as_view(), name='studnet_assng'),
     path('student/assignment/submission/', views2.StudentAssignmentSubmissionView.as_view(), name='submission'),
 

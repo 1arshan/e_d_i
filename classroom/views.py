@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission
+from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission,StudentAttach
 from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, \
-    InstituteAssosiatedSerializer, AssingmentSerializer, AssingmentSubmissionSerializer, InstituteTeacherInfoSerializer
+    InstituteAssosiatedSerializer, AssingmentSerializer, AssingmentSubmissionSerializer, InstituteTeacherInfoSerializer \
+    , ClassAdminSerializer, StudentAtatchSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -80,15 +81,17 @@ class InstituteTeacherView(generics.ListCreateAPIView, generics.UpdateAPIView):
         return InstituteTeacher.objects.filter(institute_link=institute_link)
 
     def create(self, request, *args, **kwargs):
+        data = self.request.data
         self.permission()
-        serializer = self.serializer_class(data=self.request.data)
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             t = serializer.validated_data['teacher_link']
             if InstituteTeacher.objects.filter(teacher_link=t,
                                                institute_link=serializer.validated_data['institute_link']).exists():
                 x = {"msg": "teacher already added"}
                 return Response(x, status=status.HTTP_400_BAD_REQUEST)
-            if self.request.GET['institute_link'] ==serializer.validated_data['institute_link']:
+
+            if self.request.GET['institute_link'] == data['institute_link']:
                 serializer.save()
                 x = {"msg": "teacher save"}
                 return Response(x, status=status.HTTP_201_CREATED)
@@ -190,7 +193,7 @@ class ClassView(generics.ListCreateAPIView, generics.UpdateAPIView):
 # ---For admin to manage classes in his institute--->>>>>>
 # ----institute link is must
 class ClassAdminView(generics.ListCreateAPIView, generics.UpdateAPIView):
-    serializer_class = ClassSerializer
+    serializer_class = ClassAdminSerializer
 
     def get_queryset(self):
         institute_link = InstituteTeacherView.permission(self)
@@ -382,15 +385,28 @@ class InstituteOtherView(generics.ListAPIView):
 
 
 # ------For  Teacher----->>>>
+class Perm4(BasePermission):
+    def has_permission(self, request, view):
+        username = request.user.username
+        class_link = request.GET['class_link']
+        try:
+            if Class.objects.get(pk=class_link, teacher_link=username):
+                return True
+            else:
+                raise PermissionError
+        except Exception:
+            raise PermissionError
+
+
 # ------Teacher to see assign submitted----->>>>
 class AssingmentSubmittedView(generics.ListAPIView):
     serializer_class = AssingmentSubmissionSerializer
+    permission_classes = [IsAuthenticated, Perm4]
 
     def get_queryset(self):
         assingmnet_link = self.request.GET['assingmnet_link']
         class_link = self.request.GET['class_link']
-        return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link,
-                                                   assignment_link__class_link=class_link)
+        return AssignmentSubmission.objects.filter(assignment_link=assingmnet_link)
 
 
 # ----For admin----->>>
@@ -418,3 +434,13 @@ class InstituteTeacherInfoView(generics.ListAPIView):
             return InstituteTeacher.objects.filter(institute_link=institute_link)
         except Exception:
             raise PermissionError
+
+
+# ---For teacher------->>>>
+# ---to see student in the class
+class TeacherStudentView(generics.ListAPIView):
+    serializer_class = StudentAtatchSerializer
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        return StudentAttach.objects.filter(class_link=class_link,class_link__teacher_link=self.request.user.username)

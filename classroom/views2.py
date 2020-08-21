@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach, AssignmentSubmission
+from .models import Institute, Class, Assignment, StudentAttach, AssignmentSubmission
 from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, \
-    InstituteAssosiatedSerializer, AssingmentSerializer, AssingmentSubmissionSerializer
+    StudentAtatch2Serializer, AssingmentSerializer, AssingmentSubmissionSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -60,7 +60,7 @@ class StudentAssignmentView(generics.ListAPIView):
 class Perm1(BasePermission):
     def has_permission(self, request, view):
         username = request.user.username
-        #assignment_link = request.GET['assignment_link']
+        # assignment_link = request.GET['assignment_link']
         try:
 
             class_link = request.GET['class_link']
@@ -105,3 +105,14 @@ class StudentAssignmentSubmissionView(generics.ListCreateAPIView, generics.Updat
             x = {"msg": "Assignment Submitted updated"}
             return Response(x, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ---For studetn---->>>>
+# ----class link is must  will be pass in url------>>>>>>>
+class StudentClassmateView(generics.ListAPIView):
+    serializer_class = StudentAtatch2Serializer
+    permission_classes = [IsAuthenticated, Perm1]
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        return StudentAttach.objects.filter(class_link=class_link)

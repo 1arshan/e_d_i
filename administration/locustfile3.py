@@ -37,8 +37,7 @@ class QuickstartUser(HttpUser):
         subject_link = str(random.randrange(1, 12))
         # topic = random.choice(["T1", "T2", "T3", "T4", "T5"])
         # video_link = "https://www.youtube.com/watch?v=j1ErIiGqwGg"
-        #chapter = random.choice(["Ch1", "Ch2", "Ch3", "Ch4", "Ch5"])
+        chapter = random.choice(["Ch1", "Ch2", "Ch3", "Ch4", "Ch5"])
         # teacher_link = "55"
-        self.client.get("/user/testing/", {"subject_link": subject_link, "standard_link": standard_link
-            })
-#, "chapter": chapter
+        self.client.post("/user/testing/", {"subject_link": subject_link, "standard_link": standard_link
+                                            , "chapter": chapter})

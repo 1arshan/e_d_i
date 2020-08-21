@@ -1,4 +1,5 @@
-from .models import InstituteTeacher,Class,AssignmentSubmission
+from .models import InstituteTeacher, Class, AssignmentSubmission, StudentAttach
+
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
@@ -15,4 +16,9 @@ def class_signal(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=AssignmentSubmission)
 def assgn_submission_signal(sender, instance, **kwargs):
+    instance.student_name = instance.student_link.first_name + " " + instance.student_link.last_name
+
+
+@receiver(pre_save, sender=StudentAttach)
+def student_class_signal(sender, instance, **kwargs):
     instance.student_name = instance.student_link.first_name + " " + instance.student_link.last_name
