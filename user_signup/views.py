@@ -67,7 +67,7 @@ class StudentVerifyOtpView(APIView):
         data_receive = request.data
         data = TempStudent.objects.get(phone_number=data_receive['phone_number'])
         diff = datetime.now(timezone.utc) - data.date
-        if diff.seconds < 5000:
+        if diff.seconds < 50:
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.get(username=str(int(data.phone_number) * 30))
@@ -150,7 +150,7 @@ class TeacherVerifyOtpView(APIView):
         data_receive = request.data
         data = TempTeacher.objects.get(phone_number=data_receive['phone_number'])
         diff = datetime.now(timezone.utc) - data.date
-        if diff.seconds < 500:
+        if diff.seconds < 50:
             if data_receive["otp"] == data.otp:
                 try:
                     user = User.objects.get(username=str(int(data.phone_number) * 30))

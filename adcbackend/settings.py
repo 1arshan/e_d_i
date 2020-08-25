@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'adcbackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': DatabaseSecretLocal.engine,
@@ -120,7 +120,7 @@ DATABASES = {
         'PORT': DatabaseSecretCloud.port,
         }
     }
-
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

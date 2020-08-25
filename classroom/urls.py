@@ -41,6 +41,7 @@ urlpatterns = [
 
     #---For student---
     path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question
-    path('test/result/', views3.MockTestResultGetView.as_view()),# get back their result
-    path('classtest/s/', views3.ClassTestStudentView.as_view()),# student give their test
+    path('test/result/get/', views3.MockTestResultGetView.as_view()),# get back their result
+    path('test/result/post/', views3.MockTestResultPostView.as_view()),# post their result
+    path('classtest/s/', views3.ClassTestStudentView.as_view()),# class me assigneknt dena hai
 ]

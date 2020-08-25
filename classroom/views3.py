@@ -1,5 +1,6 @@
-from .models import QuestionBank, StudentTest, ClassTest, Class,StudentAttach
-from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer
+from .models import QuestionBank, StudentTest, ClassTest, Class, StudentAttach
+from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer, \
+    StudentResultPostSerializer,ClassTestStudentSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -117,11 +118,16 @@ class MockTestView(generics.ListAPIView):
 
 
 # ---For student to see their result
-class MockTestResultGetView(generics.ListCreateAPIView):
+class MockTestResultGetView(generics.ListAPIView):
     serializer_class = StudentResultGetSerializer
 
     def get_queryset(self):
         return StudentTest.objects.filter(student_link=self.request.user.pk)
+
+
+# ---FOr student to psot their result
+class MockTestResultPostView(generics.CreateAPIView):
+    serializer_class = StudentResultPostSerializer
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
@@ -168,14 +174,13 @@ class ClassTestTeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, g
     def delete(self, request, *args, **kwargs):
         pk = self.request.GET['pk']
         class_link = self.request.GET['class_link']
-        t = ClassTest.objects.get(id=pk,class_link=class_link)
+        t = ClassTest.objects.get(id=pk, class_link=class_link)
         t.delete()
         x = {"msg": "Test Deleted"}
         return Response(x, status=status.HTTP_201_CREATED)
 
 
-
-#For student to give their test--->>>
+# For student to give their test--->>>
 class Perm3(BasePermission):
     def has_permission(self, request, view):
         username = request.user.username
@@ -188,11 +193,13 @@ class Perm3(BasePermission):
 
 
 class ClassTestStudentView(generics.ListAPIView):
-    serializer_class = ClassTestSerializer
+    serializer_class = ClassTestStudentSerializer
     permission_classes = [IsAuthenticated, Perm3]
 
     def get_queryset(self):
         class_link = self.request.GET['class_link']
-        t = ClassTest.objects.filter(class_link=class_link).values()
+        t = ClassTest.objects.filter(class_link=class_link).values('starting_time')
+        #for x in
+        #diff = datetime.now(timezone.utc) -t.
         print(t)
         return ClassTest.objects.filter(class_link=class_link)

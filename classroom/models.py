@@ -126,8 +126,9 @@ class ClassTest(models.Model):
     mark_per_ques = models.CharField(max_length=5)
     negative_marking = models.CharField(max_length=3)
     starting_time = models.DateTimeField()
+    ending_time = models.DateTimeField(blank=True)
 
 
 class ClassTestQuestion(models.Model):
-    class_test_link = models.ForeignKey(ClassTest, on_delete=models.CASCADE,related_name='class_link_test',blank=True)
+    class_test_link = models.ForeignKey(ClassTest, on_delete=models.CASCADE, related_name='class_link_test', blank=True)
     ques_pk = models.ForeignKey(QuestionBank, on_delete=models.CASCADE)
