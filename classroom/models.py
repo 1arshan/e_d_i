@@ -1,5 +1,8 @@
 from django.db import models
 from user_signup.models import TeacherProfile, StudentProfile
+from subject_material.models import StandardOrClass, Subject
+from django_better_admin_arrayfield.models.fields import ArrayField
+from django.contrib.auth.models import User
 
 
 class Institute(models.Model):
@@ -71,3 +74,60 @@ class AssignmentSubmission(models.Model):
     ans_file = models.FileField(upload_to=renaming_uploaded_file2)
     student_link = models.ForeignKey(StudentProfile, on_delete=models.DO_NOTHING)
     student_name = models.CharField(max_length=25, blank=True)
+
+
+def renaming_uploaded_file3(instance, filename):
+    return "questionbank/" + str(instance.subject_link.class_link) + "/" + str(instance.subject_link.subject) + \
+           "/" + str(instance.chapter) + "/question_" + filename
+
+
+def renaming_uploaded_file4(instance, filename):
+    return "questionbank/" + str(instance.subject_link.class_link) + "/" + str(instance.subject_link.subject) + \
+           "/" + str(instance.chapter) + "/answer_" + filename
+
+
+# ------Mock test Begin
+
+
+class QuestionBank(models.Model):
+    class_link = models.ForeignKey(StandardOrClass, on_delete=models.CASCADE, to_field='standard_or_class')
+    subject_link = models.ForeignKey(Subject, on_delete=models.CASCADE, to_field='subject_name')
+    chapter = models.CharField(max_length=30)
+    question = models.TextField()
+    option = ArrayField(models.CharField(max_length=20, blank=True), blank=True)
+    answer = models.CharField(max_length=2)
+    ques_photo = models.ImageField(blank=True, upload_to=renaming_uploaded_file3)
+    ans_photo = models.ImageField(blank=True, upload_to=renaming_uploaded_file4)
+    explanation = models.TextField(blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    public_access = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'{self.pk}'
+
+
+class StudentTest(models.Model):
+    type = models.CharField(max_length=10)
+    student_link = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    total_mark = models.CharField(max_length=5)
+    mark_score = models.CharField(max_length=5)
+    date = models.DateTimeField(auto_now=True)
+
+
+class StudentTestData(models.Model):
+    ques_pk = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, related_name='pk_ques')
+    option_selected = models.CharField(max_length=2)
+    student_test_link = models.ForeignKey(StudentTest, on_delete=models.DO_NOTHING, related_name='student_link_test',
+                                          blank=True)
+
+
+class ClassTest(models.Model):
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE)
+    mark_per_ques = models.CharField(max_length=5)
+    negative_marking = models.CharField(max_length=3)
+    starting_time = models.DateTimeField()
+
+
+class ClassTestQuestion(models.Model):
+    class_test_link = models.ForeignKey(ClassTest, on_delete=models.CASCADE,related_name='class_link_test',blank=True)
+    ques_pk = models.ForeignKey(QuestionBank, on_delete=models.CASCADE)

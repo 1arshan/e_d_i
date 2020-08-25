@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, views2
+from . import views, views2,views3
 
 urlpatterns = [
     path('institute/', views.InstituteView.as_view(), name='institute_view'),  # only for admin
@@ -33,4 +33,14 @@ urlpatterns = [
     path('student/assignment/', views2.StudentAssignmentView.as_view(), name='studnet_assng'),
     path('student/assignment/submission/', views2.StudentAssignmentSubmissionView.as_view(), name='submission'),
 
+#-----Mock test begin---->>>>>>
+    #--For teacher
+    path('quesbank/t/', views3.QuestionBankView.as_view(), name='bank'),# teacher to create ques bank
+    path('quesbank/private/t/', views3.QuestionBankPrivateView.as_view(), name='p_bank'),# private ques bank for teachr
+    path('classtest/t/', views3.ClassTestTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
+
+    #---For student---
+    path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question
+    path('test/result/', views3.MockTestResultGetView.as_view()),# get back their result
+    path('classtest/s/', views3.ClassTestStudentView.as_view()),# student give their test
 ]

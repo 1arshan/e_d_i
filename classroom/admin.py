@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach,AssignmentSubmission
-
+from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach,AssignmentSubmission,\
+    QuestionBank,StudentTest,StudentTestData,ClassTest,ClassTestQuestion
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 @admin.register(Institute)
 class InstituteAdmin(admin.ModelAdmin):
@@ -35,3 +36,36 @@ class StudentAttachAdmin(admin.ModelAdmin):
 class AssignmentSubmissionAdmin(admin.ModelAdmin):
     list_display = ("assignment_link", 'time_remark','student_link', "pk")
     readonly_fields = ('pk','submission_datetime')
+
+
+@admin.register(QuestionBank)
+class QuestionBankAdmin(admin.ModelAdmin,DynamicArrayMixin):
+    list_display = ('class_link','subject_link','created_by','chapter', "pk")
+    readonly_fields = ('pk',)
+
+
+class StudentTestDataInLine(admin.TabularInline):
+    model = StudentTestData
+    extra = 0
+
+
+@admin.register(StudentTest)
+class StudentTestAdmin(admin.ModelAdmin):
+    list_display = ("type", "student_link", 'total_mark', 'mark_score')
+    inlines = [
+        StudentTestDataInLine
+    ]
+
+
+class ClassTestQuestionInLine(admin.TabularInline):
+    model = ClassTestQuestion
+    extra = 0
+
+
+@admin.register(ClassTest)
+class ClassTestAdmin(admin.ModelAdmin):
+    list_display = ("class_link", "mark_per_ques", 'negative_marking')
+    inlines = [
+        ClassTestQuestionInLine
+    ]
+

@@ -108,3 +108,4 @@ class DoubtsQuestionAnswerSerializer(serializers.ModelSerializer):
         model = DoubtsQuestion
         fields = ['material_link', 'doubts_question', 'pk', 'question_comment_link'
             , 'question_photos_link']
+

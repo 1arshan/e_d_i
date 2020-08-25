@@ -1,15 +1,12 @@
-from django.shortcuts import render
-from .models import Institute, Class, Assignment, StudentAttach, AssignmentSubmission
-from .serializers import InstituteSerializer, InstituteTeacherSerializer, ClassSerializer, \
+from .models import Class, Assignment, StudentAttach, AssignmentSubmission
+from .serializers import ClassSerializer, \
     StudentAtatch2Serializer, AssingmentSerializer, AssingmentSubmissionSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-import random
-import string
 from rest_framework.permissions import BasePermission
-from user_signup.models import StudentProfile, TeacherProfile
+from user_signup.models import StudentProfile
 from datetime import datetime, timezone
 
 
