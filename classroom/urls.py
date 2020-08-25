@@ -35,12 +35,12 @@ urlpatterns = [
 
 #-----Mock test begin---->>>>>>
     #--For teacher
-    #path('quesbank/t/', views3.QuestionBankView.as_view(), name='bank'),# teacher to create ques bank
-    #path('quesbank/private/t/', views3.QuestionBankPrivateView.as_view(), name='p_bank'),# private ques bank for teachr
-    #path('classtest/t/', views3.ClassTestTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
+    path('quesbank/t/', views3.QuestionBankView.as_view(), name='bank'),# teacher to create ques bank
+    path('quesbank/private/t/', views3.QuestionBankPrivateView.as_view(), name='p_bank'),# private ques bank for teachr
+    path('classtest/t/', views3.ClassTestTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
 
     #---For student---
-    #path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question
-    #path('test/result/', views3.MockTestResultGetView.as_view()),# get back their result
-    #path('classtest/s/', views3.ClassTestStudentView.as_view()),# student give their test
+    path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question
+    path('test/result/', views3.MockTestResultGetView.as_view()),# get back their result
+    path('classtest/s/', views3.ClassTestStudentView.as_view()),# student give their test
 ]
