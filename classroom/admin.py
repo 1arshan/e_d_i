@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach,AssignmentSubmission,\
-    QuestionBank,StudentTest,StudentTestData,ClassTest,ClassTestQuestion
+from .models import Institute, InstituteTeacher, Class, Assignment, StudentAttach,AssignmentSubmission ,\
+   QuestionBank,StudentTest,StudentTestData,ClassTest,ClassTestQuestion
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 @admin.register(Institute)

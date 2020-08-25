@@ -1,4 +1,4 @@
-from .models import QuestionBank, StudentTest, ClassTest, Class,StudentAttach
+"""from .models import QuestionBank, StudentTest, ClassTest, Class,StudentAttach
 from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer
 from rest_framework import generics
 from rest_framework.response import Response
@@ -196,3 +196,4 @@ class ClassTestStudentView(generics.ListAPIView):
         t = ClassTest.objects.filter(class_link=class_link).values()
         print(t)
         return ClassTest.objects.filter(class_link=class_link)
+"""

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
-from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission, StudentAttach, QuestionBank, \
-    StudentTest, StudentTestData, ClassTest, ClassTestQuestion
+from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission, StudentAttach#, QuestionBank, \
+    #StudentTest, StudentTestData, ClassTest, ClassTestQuestion
 
 
 class InstituteSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class StudentAtatch2Serializer(serializers.ModelSerializer):
         model = StudentAttach
         fields = ['student_name']
 
-
+"""
 class QuestionBankSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionBank
@@ -127,3 +127,4 @@ class ClassTestSerializer(serializers.ModelSerializer):
         for x in class_link_test_data:
             ClassTestQuestion.objects.create(class_test_link=temp, **x)
         return temp
+"""
