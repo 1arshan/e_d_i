@@ -41,9 +41,11 @@ urlpatterns = [
     path('classtest/get/t/', views3.ClassTestTeacherGetView.as_view(), name='t_clsstrst'),# tescher ---get
     path('classtest/result/t/', views3.ClassTestResultTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
 
+
     #---For student---
     path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question
     path('test/result/get/', views3.MockTestResultGetView.as_view()),# get back their result
     path('test/result/post/', views3.MockTestResultPostView.as_view()),# post their result
-    path('classtest/s/', views3.ClassTestStudentView.as_view()),# class me assigneknt dena hai
+    path('classtest/s/', views3.ClassTestStudentView.as_view()),# kitne test student ke due hai
 ]
+

@@ -64,7 +64,8 @@ class ClassTestQuestionInLine(admin.TabularInline):
 
 @admin.register(ClassTest)
 class ClassTestAdmin(admin.ModelAdmin):
-    list_display = ("class_link", "mark_per_ques", 'negative_marking')
+    list_display = ("class_link", "mark_per_ques", 'negative_marking','pk')
+    readonly_fields = ('pk',)
     inlines = [
         ClassTestQuestionInLine
     ]

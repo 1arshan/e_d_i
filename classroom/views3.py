@@ -29,17 +29,22 @@ class QuestionBankView(generics.ListCreateAPIView, generics.UpdateAPIView, gener
     permission_classes = [IsAuthenticated, Perm1]
 
     def get_queryset(self):
-        class_link = self.request.GET['class_link']
         try:
-            subject_link = self.request.GET['subject_link']
+            class_link = self.request.GET['class_link']
             try:
-                chapter = self.request.GET['chapter']
-                return QuestionBank.objects.filter(chapter=chapter, subject_link=subject_link, class_link=class_link,
-                                                   public_access=True)
+                subject_link = self.request.GET['subject_link']
+                try:
+                    chapter = self.request.GET['chapter']
+                    return QuestionBank.objects.filter(chapter=chapter, subject_link=subject_link,
+                                                       class_link=class_link,
+                                                       public_access=True)
+                except Exception:
+                    return QuestionBank.objects.filter(subject_link=subject_link, class_link=class_link,
+                                                       public_access=True)
             except Exception:
-                return QuestionBank.objects.filter(subject_link=subject_link, class_link=class_link, public_access=True)
+                return QuestionBank.objects.filter(class_link=class_link, public_access=True)
         except Exception:
-            return QuestionBank.objects.filter(class_link=class_link, public_access=True)
+            return QuestionBank.objects.filter(public_access=True)
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
@@ -82,18 +87,21 @@ class QuestionBankPrivateView(generics.ListAPIView):
 
     def get_queryset(self):
         username = self.request.user.pk
-        class_link = self.request.GET['class_link']
         try:
-            subject_link = self.request.GET['subject_link']
+            class_link = self.request.GET['class_link']
             try:
-                chapter = self.request.GET['chapter']
-                return QuestionBank.objects.filter(chapter=chapter, subject_link=subject_link, class_link=class_link
-                                                   , created_by=username)
+                subject_link = self.request.GET['subject_link']
+                try:
+                    chapter = self.request.GET['chapter']
+                    return QuestionBank.objects.filter(chapter=chapter, subject_link=subject_link, class_link=class_link
+                                                       , created_by=username)
+                except Exception:
+                    return QuestionBank.objects.filter(subject_link=subject_link, class_link=class_link,
+                                                       created_by=username)
             except Exception:
-                return QuestionBank.objects.filter(subject_link=subject_link, class_link=class_link,
-                                                   created_by=username)
+                return QuestionBank.objects.filter(class_link=class_link, created_by=username)
         except Exception:
-            return QuestionBank.objects.filter(class_link=class_link, created_by=username)
+            return QuestionBank.objects.filter(created_by=username)
 
 
 # ---For student--->>>>
@@ -212,11 +220,13 @@ class ClassTestStudentView(generics.ListAPIView):
 
     def get_queryset(self):
         class_link = self.request.GET['class_link']
-        t = ClassTest.objects.filter(class_link=class_link).values('starting_time')
-        # for x in
-        # diff = datetime.now(timezone.utc) -t.
-        print(t)
-        return ClassTest.objects.filter(class_link=class_link)
+        t = ClassTest.objects.filter(class_link=class_link).values()
+        y = []
+        for x in t:
+
+            if x['ending_time'] >= datetime.now(timezone.utc):
+                y.append(x['id'])
+        return ClassTest.objects.filter(pk__in=y)
 
 
 # --For teacher to see student mark of the studnet in that class
