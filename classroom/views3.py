@@ -1,6 +1,6 @@
 from .models import QuestionBank, StudentTest, ClassTest, Class, StudentAttach
 from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer, \
-    StudentResultPostSerializer, ClassTestStudentSerializer,ClassTestGetSerializer
+    StudentResultPostSerializer, ClassTestStudentSerializer, ClassTestGetSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -180,14 +180,18 @@ class ClassTestTeacherView(generics.ListCreateAPIView, generics.DestroyAPIView):
         return Response(x, status=status.HTTP_201_CREATED)
 
 
-#---teacher to see ques paper created in that class
+# ---teacher to see ques paper created in that class
 class ClassTestTeacherGetView(generics.ListAPIView):
     serializer_class = ClassTestGetSerializer
-    permission_classes = [IsAuthenticated, Perm2]
 
     def get_queryset(self):
-        class_link = self.request.GET['class_link']
-        return ClassTest.objects.filter(class_link=class_link)
+        try:
+            username = self.request.user.username
+            class_link = self.request.GET['class_link']
+            return ClassTest.objects.filter(class_link=class_link, class_link__teacher_link=username)
+        except Exception:
+            username = self.request.user.username
+            return ClassTest.objects.filter(class_link__teacher_link=username)
 
 
 # For student to give their test--->>>
@@ -233,7 +237,7 @@ class ClassTestResultTeacherView(generics.ListAPIView):
 
     def get_queryset(self):
         class_link = self.request.GET['class_link']
-        #return StudentTest.objects.filter(class_link=class_link)
+        # return StudentTest.objects.filter(class_link=class_link)
         return StudentTest.objects.filter(class_link=class_link).distinct('date')
 
 
