@@ -84,6 +84,7 @@ class QuesBankStudnentResuktSerializer(serializers.ModelSerializer):
 
 class StudentResultDataGetSerializer(serializers.ModelSerializer):
     ques_pk = QuestionBankSerializer()
+
     class Meta:
         model = StudentTestData
         fields = ['ques_pk', 'option_selected', 'student_test_link']
@@ -100,7 +101,7 @@ class StudentResultGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentTest
-        fields = ['total_mark', 'type', 'mark_score', 'student_link_test', 'id', 'date', 'student_link']
+        fields = ['total_mark', 'type', 'mark_score', 'student_link_test', 'id', 'date', 'student_link', 'class_link']
 
 
 class StudentResultPostSerializer(serializers.ModelSerializer):
@@ -108,7 +109,7 @@ class StudentResultPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentTest
-        fields = ['total_mark', 'type', 'mark_score', 'student_link_test', 'id', 'date', 'student_link']
+        fields = ['total_mark', 'type', 'mark_score', 'student_link_test', 'id', 'date', 'student_link', 'class_link']
 
     def create(self, validated_data):
         student_link_test_data = validated_data.pop('student_link_test')
@@ -125,7 +126,7 @@ class ClassTestQuestionSerializer(serializers.ModelSerializer):
         model = ClassTestQuestion
         fields = ['ques_pk', 'pk']
 
-
+#for teacher to post delete ques paper
 class ClassTestSerializer(serializers.ModelSerializer):
     class_link_test = ClassTestQuestionSerializer(many=True)
 
@@ -143,9 +144,31 @@ class ClassTestSerializer(serializers.ModelSerializer):
         return temp
 
 
+#---For teacher to see ques paper
+class ClassTestQuestionGetSerializer(serializers.ModelSerializer):
+    ques_pk = QuestionBankSerializer()
+    class Meta:
+        model = ClassTestQuestion
+        fields = ['ques_pk', 'pk']
+
+
+
+
+class ClassTestGetSerializer(serializers.ModelSerializer):
+    class_link_test = ClassTestQuestionGetSerializer(many=True)
+
+    class Meta:
+        model = ClassTest
+        fields = ['class_link', 'mark_per_ques', 'negative_marking', 'starting_time', 'class_link_test',
+                  'ending_time', 'pk']
+
+
+
+
 # For student to see their due test in class
 class ClassTestQuestionStudentSerializer(serializers.ModelSerializer):
-    ques_pk =QuestionBankSerializer()
+    ques_pk = QuestionBankSerializer()
+
     class Meta:
         model = ClassTestQuestion
         fields = ['ques_pk', 'pk']

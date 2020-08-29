@@ -28,7 +28,7 @@ urlpatterns = [
     # password change hoga
     path('new_password/<str:uidb64>/<str:token>/', views2.EmailResetPasswordView.as_view(), name='email_newpassword'),
     # password change hoga
-    # path('otp/login/', views2.otp_login_view,name='otplogin'),
+    path('otp/login/<str:typ>/<str:ph_no>/', views2.OtpLoginView.as_view(),name='otplogin'),
     # ------Done ------------------->>>>>>>>>>>>>>
 
     path('verify_email/<str:uidb64>/<str:token>/<str:typ>/', views.activate_account, name='activate'),

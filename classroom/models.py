@@ -112,6 +112,7 @@ class StudentTest(models.Model):
     total_mark = models.CharField(max_length=5)
     mark_score = models.CharField(max_length=5)
     date = models.DateTimeField(auto_now=True)
+    class_link = models.ForeignKey(Class, on_delete=models.DO_NOTHING, blank=True,null=True)
 
 
 class StudentTestData(models.Model):

@@ -37,7 +37,9 @@ urlpatterns = [
     #--For teacher
     path('quesbank/t/', views3.QuestionBankView.as_view(), name='bank'),# teacher to create ques bank
     path('quesbank/private/t/', views3.QuestionBankPrivateView.as_view(), name='p_bank'),# private ques bank for teachr
-    path('classtest/t/', views3.ClassTestTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
+    path('classtest/t/', views3.ClassTestTeacherView.as_view(), name='t_clsstrst'),#----teachder post and delete
+    path('classtest/get/t/', views3.ClassTestTeacherGetView.as_view(), name='t_clsstrst'),# tescher ---get
+    path('classtest/result/t/', views3.ClassTestResultTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
 
     #---For student---
     path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question

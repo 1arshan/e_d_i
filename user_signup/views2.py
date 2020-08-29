@@ -243,3 +243,47 @@ class EmailVerificationView(APIView):
         MailVerification(user, type=typ)
         x = {'msg': "verification mail is send to your email"}
         return Response(x, status=status.HTTP_200_OK)
+
+
+class OtpLoginView(APIView):
+    permission_classes = []
+    def get(self, request, ph_no,typ):
+        try:
+
+            if typ =='s':
+                data = StudentProfile.objects.get(phone_number=ph_no)
+            else:
+                data = TeacherProfile.objects.get(phone_number=ph_no)
+
+            data.date =random.randrange(10101, 909090)
+            data.save()
+            x = {"msg": "otp send"}
+            return Response(x, status=status.HTTP_202_ACCEPTED)
+        except Exception :
+            raise ObjectDoesNotExist
+
+    def post(self, request, ph_no,typ):
+        data_receive = request.data
+        try:
+
+            if typ == 's':
+                data = StudentProfile.objects.get(phone_number=ph_no)
+            else:
+                data = TeacherProfile.objects.get(phone_number=ph_no)
+
+            diff = datetime.now(timezone.utc) - data.date
+            if diff.seconds > 50:
+                if data.otp ==data_receive['otp']:
+                    user =User.objects.get(username=ph_no)
+                    x = get_tokens_for_user(user)
+                    return Response(x, status=status.HTTP_202_ACCEPTED)
+                else:
+                    x = {"msg": "otp incorrect"}
+                    return Response(x, status=status.HTTP_200_OK)
+            else:
+                x = {"msg": "otp expire"}
+                return Response(x, status=status.HTTP_200_OK)
+
+        except Exception:
+            raise ObjectDoesNotExist
+

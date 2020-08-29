@@ -1,6 +1,6 @@
 from .models import QuestionBank, StudentTest, ClassTest, Class, StudentAttach
 from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer, \
-    StudentResultPostSerializer,ClassTestStudentSerializer
+    StudentResultPostSerializer, ClassTestStudentSerializer,ClassTestGetSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -153,7 +153,7 @@ class Perm2(BasePermission):
 
 
 # to create clss test--->>>
-class ClassTestTeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
+class ClassTestTeacherView(generics.ListCreateAPIView, generics.DestroyAPIView):
     serializer_class = ClassTestSerializer
     permission_classes = [IsAuthenticated, Perm2]
 
@@ -180,6 +180,16 @@ class ClassTestTeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, g
         return Response(x, status=status.HTTP_201_CREATED)
 
 
+#---teacher to see ques paper created in that class
+class ClassTestTeacherGetView(generics.ListAPIView):
+    serializer_class = ClassTestGetSerializer
+    permission_classes = [IsAuthenticated, Perm2]
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        return ClassTest.objects.filter(class_link=class_link)
+
+
 # For student to give their test--->>>
 class Perm3(BasePermission):
     def has_permission(self, request, view):
@@ -199,7 +209,40 @@ class ClassTestStudentView(generics.ListAPIView):
     def get_queryset(self):
         class_link = self.request.GET['class_link']
         t = ClassTest.objects.filter(class_link=class_link).values('starting_time')
-        #for x in
-        #diff = datetime.now(timezone.utc) -t.
+        # for x in
+        # diff = datetime.now(timezone.utc) -t.
         print(t)
         return ClassTest.objects.filter(class_link=class_link)
+
+
+# --For teacher to see student mark of the studnet in that class
+class Perm4(BasePermission):
+    def has_permission(self, request, view):
+        username = request.user.username
+        class_link = request.GET['class_link']
+        try:
+            Class.objects.get(pk=class_link, teacher_link=username)
+            return True
+        except Exception:
+            raise PermissionError
+
+
+class ClassTestResultTeacherView(generics.ListAPIView):
+    serializer_class = StudentResultGetSerializer
+    permission_classes = [IsAuthenticated, Perm4]
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        #return StudentTest.objects.filter(class_link=class_link)
+        return StudentTest.objects.filter(class_link=class_link).distinct('date')
+
+
+"""
+class ClassTestResultTeacherView(generics.ListAPIView):
+    serializer_class = StudentResultGetSerializer
+    permission_classes = [IsAuthenticated, Perm4]
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        return StudentTest.objects.filter(class_link=class_link)
+"""
