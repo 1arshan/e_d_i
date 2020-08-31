@@ -2,6 +2,7 @@ from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 from .models import Institute, InstituteTeacher, Class, Assignment, AssignmentSubmission, StudentAttach, QuestionBank, \
     StudentTest, StudentTestData, ClassTest, ClassTestQuestion
+from django.contrib.auth.models import User
 
 
 class InstituteSerializer(serializers.ModelSerializer):
@@ -126,7 +127,8 @@ class ClassTestQuestionSerializer(serializers.ModelSerializer):
         model = ClassTestQuestion
         fields = ['ques_pk', 'pk']
 
-#for teacher to post delete ques paper
+
+# for teacher to post delete ques paper
 class ClassTestSerializer(serializers.ModelSerializer):
     class_link_test = ClassTestQuestionSerializer(many=True)
 
@@ -144,25 +146,23 @@ class ClassTestSerializer(serializers.ModelSerializer):
         return temp
 
 
-#---For teacher to see ques paper
+# ---For teacher to see ques paper
 class ClassTestQuestionGetSerializer(serializers.ModelSerializer):
     ques_pk = QuestionBankSerializer()
+
     class Meta:
         model = ClassTestQuestion
         fields = ['ques_pk', 'pk']
 
 
-
-
 class ClassTestGetSerializer(serializers.ModelSerializer):
     class_link_test = ClassTestQuestionGetSerializer(many=True)
+    class_link = ClassSerializer()
 
     class Meta:
         model = ClassTest
         fields = ['class_link', 'mark_per_ques', 'negative_marking', 'starting_time', 'class_link_test',
                   'ending_time', 'pk']
-
-
 
 
 # For student to see their due test in class
@@ -181,3 +181,26 @@ class ClassTestStudentSerializer(serializers.ModelSerializer):
         model = ClassTest
         fields = ['class_link', 'mark_per_ques', 'negative_marking', 'starting_time', 'class_link_test',
                   'ending_time', 'pk']
+
+
+# ----teacher homempage
+class TeacherResultHomepageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentTest
+        fields = ['date']
+
+
+# student proxy----
+class StudentProfileProxySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username']
+
+
+# ---teacher specifc clsas
+class TeacherResultClassSerializer(serializers.ModelSerializer):
+    student_link = StudentProfileProxySerializer()
+
+    class Meta:
+        model = StudentTest
+        fields = ['total_mark', 'mark_score', 'id', 'student_link']

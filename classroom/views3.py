@@ -1,6 +1,7 @@
 from .models import QuestionBank, StudentTest, ClassTest, Class, StudentAttach
 from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer, \
-    StudentResultPostSerializer, ClassTestStudentSerializer, ClassTestGetSerializer
+    StudentResultPostSerializer, ClassTestStudentSerializer, ClassTestGetSerializer, \
+    TeacherResultHomepageSerializer, TeacherResultClassSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -241,22 +242,33 @@ class Perm4(BasePermission):
             raise PermissionError
 
 
-class ClassTestResultTeacherView(generics.ListAPIView):
-    serializer_class = StudentResultGetSerializer
+# ----teacher to see result----->>>>>>
+
+# ---homepage of teacher result --->>>>>
+class ClassTestResultHomeTeacherView(generics.ListAPIView):
+    serializer_class = TeacherResultHomepageSerializer
     permission_classes = [IsAuthenticated, Perm4]
 
     def get_queryset(self):
         class_link = self.request.GET['class_link']
-        # return StudentTest.objects.filter(class_link=class_link)
         return StudentTest.objects.filter(class_link=class_link).distinct('date')
 
 
-"""
-class ClassTestResultTeacherView(generics.ListAPIView):
+class ClassTestResultTestTeacherView(generics.ListAPIView):
+    serializer_class = TeacherResultClassSerializer
+    permission_classes = [IsAuthenticated, Perm4]
+
+    def get_queryset(self):
+        date = self.request.GET['date']
+        date = date + "+05:30"
+        class_link = self.request.GET['class_link']
+        return StudentTest.objects.filter(class_link=class_link, date=date)
+
+
+class ClassTestResultSpecificTeacherView(generics.ListAPIView):
     serializer_class = StudentResultGetSerializer
     permission_classes = [IsAuthenticated, Perm4]
 
     def get_queryset(self):
-        class_link = self.request.GET['class_link']
-        return StudentTest.objects.filter(class_link=class_link)
-"""
+        pk = self.request.GET['pk']
+        return StudentTest.objects.filter(pk=pk)

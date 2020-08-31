@@ -39,13 +39,19 @@ urlpatterns = [
     path('quesbank/private/t/', views3.QuestionBankPrivateView.as_view(), name='p_bank'),# private ques bank for teachr
     path('classtest/t/', views3.ClassTestTeacherView.as_view(), name='t_clsstrst'),#----teachder post and delete
     path('classtest/get/t/', views3.ClassTestTeacherGetView.as_view(), name='t_clsstrst'),# tescher ---get
-    path('classtest/result/t/', views3.ClassTestResultTeacherView.as_view(), name='t_clsstrst'),# tescher --class test
 
+    path('classtest/result/homepage/t/', views3.ClassTestResultHomeTeacherView.as_view(), name='result_home'),
+    #teacehr result homepage
+    path('classtest/result/test/t/', views3.ClassTestResultTestTeacherView.as_view(), name='test specific'),
+    #teacher -class -speciifc test
+    path('classtest/result/specific/t/', views3.ClassTestResultSpecificTeacherView.as_view(), name='test_studetn_specific'),
+    # teacher -class -speciifc test
 
     #---For student---
     path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question
     path('test/result/get/', views3.MockTestResultGetView.as_view()),# get back their result
     path('test/result/post/', views3.MockTestResultPostView.as_view()),# post their result
     path('classtest/s/', views3.ClassTestStudentView.as_view()),# kitne test student ke due hai
+
 ]
 

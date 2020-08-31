@@ -166,7 +166,9 @@ class PasswordVerificationView(APIView):
         if user.check_password(data['password']):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = account_activation_token.make_token(user)
-            link = 'http://ec2-13-126-196-234.ap-south-1.compute.amazonaws.com/' + 'user/change/credential/' + \
+            current_site = get_current_site(request)
+            #print(current_site.domain)
+            link = current_site.domain + '/user/change/credential/' + \
                    uid + '/' + token + '/' + typ + "/"
             x = {'otl': link,
                  'msg': 'passwprd correct'}

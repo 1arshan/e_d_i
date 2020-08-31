@@ -51,7 +51,9 @@ class StudentTestDataInLine(admin.TabularInline):
 
 @admin.register(StudentTest)
 class StudentTestAdmin(admin.ModelAdmin):
-    list_display = ("type", "student_link", 'total_mark', 'mark_score')
+    list_display = ("type", "student_link", 'total_mark', 'mark_score','pk','class_link')
+    readonly_fields = ('pk',)
+
     inlines = [
         StudentTestDataInLine
     ]
