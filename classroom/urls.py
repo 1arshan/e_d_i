@@ -45,7 +45,7 @@ urlpatterns = [
     path('classtest/result/test/t/', views3.ClassTestResultTestTeacherView.as_view(), name='test specific'),
     #teacher -class -speciifc test
     path('classtest/result/specific/t/', views3.ClassTestResultSpecificTeacherView.as_view(), name='test_studetn_specific'),
-    # teacher -class -speciifc test
+    # teacher -class -specific test
 
     #---For student---
     path('mocktest/', views3.MockTestView.as_view(), name='s_mocktest'),# get back question

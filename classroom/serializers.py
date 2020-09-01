@@ -102,7 +102,8 @@ class StudentResultGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentTest
-        fields = ['total_mark', 'type', 'mark_score', 'student_link_test', 'id', 'date', 'student_link', 'class_link']
+        fields = ['total_mark', 'type', 'mark_score', 'student_link_test', 'id', 'date', 'student_link', 'class_link',
+                  'visibility']
 
 
 class StudentResultPostSerializer(serializers.ModelSerializer):
@@ -161,8 +162,8 @@ class ClassTestGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClassTest
-        fields = ['class_link', 'mark_per_ques', 'negative_marking', 'starting_time', 'class_link_test',
-                  'ending_time', 'pk']
+        fields = ['class_link', 'class_link_test',  'mark_per_ques', 'negative_marking', 'starting_time',
+                  'ending_time', 'pk', 'visibility']
 
 
 # For student to see their due test in class

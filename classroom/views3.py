@@ -162,7 +162,7 @@ class Perm2(BasePermission):
 
 
 # to create clss test--->>>
-class ClassTestTeacherView(generics.ListCreateAPIView, generics.DestroyAPIView):
+class ClassTestTeacherView(generics.ListCreateAPIView, generics.DestroyAPIView, generics.UpdateAPIView):
     serializer_class = ClassTestSerializer
     permission_classes = [IsAuthenticated, Perm2]
 
@@ -179,6 +179,19 @@ class ClassTestTeacherView(generics.ListCreateAPIView, generics.DestroyAPIView):
             x = {"msg": "Test Created"}
             return Response(x, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+        pk = self.request.GET['pk']
+        class_link = request.GET['class_link']
+        try:
+            data = ClassTest.objects.get(pk=pk)
+            data.visibility = True
+            data.save()
+            StudentTest.objects.filter(class_link=class_link, date=data.starting_time).update(visibility=True)
+            x = {"msg": "Visibility Changes"}
+            return Response(x, status=status.HTTP_201_CREATED)
+        except Exception:
+            raise PermissionError
 
     def delete(self, request, *args, **kwargs):
         pk = self.request.GET['pk']

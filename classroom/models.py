@@ -112,7 +112,8 @@ class StudentTest(models.Model):
     total_mark = models.CharField(max_length=5)
     mark_score = models.CharField(max_length=5)
     date = models.DateTimeField()
-    class_link = models.ForeignKey(Class, on_delete=models.DO_NOTHING, blank=True,null=True)
+    class_link = models.ForeignKey(Class, on_delete=models.DO_NOTHING, blank=True, null=True)
+    visibility = models.BooleanField(default=False)
 
 
 class StudentTestData(models.Model):
@@ -128,6 +129,7 @@ class ClassTest(models.Model):
     negative_marking = models.CharField(max_length=3)
     starting_time = models.DateTimeField()
     ending_time = models.DateTimeField(blank=True)
+    visibility = models.BooleanField(default=False)
 
 
 class ClassTestQuestion(models.Model):
