@@ -60,7 +60,8 @@ class TempStudentView(APIView):
 
 # do tranfering data and deleting in parallelism
 # otp verify and tranfers user data,email verification if provided
-class StudentVerifyOtpView(APIView):
+# temporary deactivating to implement otp verification by firebase--->>>>
+"""class StudentVerifyOtpView(APIView):
     permission_classes = []
 
     def post(self, request):
@@ -103,6 +104,49 @@ class StudentVerifyOtpView(APIView):
         y = {"msg": "otp expire"}
         return Response(y, status=status.HTTP_200_OK)
 
+"""
+
+
+class StudentVerifyOtpView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        data_receive = request.data
+        data = TempStudent.objects.get(phone_number=data_receive['phone_number'])
+
+        if data_receive["verification"]:
+            try:
+                user = User.objects.get(username=str(int(data.phone_number) * 30))
+                user.username = data.phone_number
+                user.save()
+
+            except Exception as e:
+                y = {"msg": "user with this phone number already exist"}
+                return Response(y, status=status.HTTP_406_NOT_ACCEPTABLE)
+            try:
+
+                StudentProfile.objects.create(standard_or_class=data.standard_or_class, user=user,
+                                              pincode=data.pincode, phone_number=data.phone_number,
+                                              email=data.email, last_name=data.last_name
+                                              , first_name=data.first_name, course_field=data.course_field)
+            except Exception as e:
+                user.delete()
+                y = {"msg": "phone number enter already exist"}
+                return Response(y, status=status.HTTP_406_NOT_ACCEPTABLE)
+            data.delete()
+            if user.email:
+                MailVerification(user, type='s')
+                mail_otp = "please verify your mail also"
+            else:
+                mail_otp = "it will be better if you also provide us your email address"
+
+            x = get_tokens_for_user(user)
+            x["msg"] = "otp verififed, Account actiuated"
+            x['mail'] = mail_otp
+            return Response(x, status=status.HTTP_202_ACCEPTED)
+        y = {"msg": 'otp incorrect'}
+        return Response(y, status=status.HTTP_200_OK)
+
 
 # temperory teacher model till phone number verified
 class TempTeacherView(APIView):
@@ -143,7 +187,8 @@ class TempTeacherView(APIView):
 
 # do tranfering data and deleting in parallelism
 # otp verify and tranfers user data,email verification if provided
-class TeacherVerifyOtpView(APIView):
+# --Commenting it to implement firebase authentication----->>>>
+"""class TeacherVerifyOtpView(APIView):
     permission_classes = []
 
     def post(self, request):
@@ -193,6 +238,58 @@ class TeacherVerifyOtpView(APIView):
             x = {"msg": "OTP incorrect"}
             return Response(x, status=status.HTTP_200_OK)
         x = {"msg": "OTP expire"}
+        return Response(x, status=status.HTTP_200_OK)
+
+"""
+
+
+#  temporary------
+class TeacherVerifyOtpView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        data_receive = request.data
+        data = TempTeacher.objects.get(phone_number=data_receive['phone_number'])
+        if data_receive["verification"]:
+            try:
+                user = User.objects.get(username=str(int(data.phone_number) * 30))
+                user.username = data.phone_number
+                user.save()
+
+            except Exception as e:
+                x = {"msg": "user with this phone number already exist"}
+                return Response(x, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+            try:
+                TeacherProfile.objects.create(teacher_description=data.description, user=user
+                                              , phone_number=data.phone_number,
+                                              email=data.email, last_name=data.last_name,
+                                              first_name=data.first_name, subject=data.subject,
+                                              experience=data.experience, max_qualification=data.max_qualification)
+
+            except Exception as e:
+                user.delete()
+                x = {"msg": "user with this email already exist"}
+                return Response(x, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+            data.delete()
+
+            if user.email:
+                MailVerification(user, type='t')
+                mail_otp = "please verify your mail also"
+            else:
+                mail_otp = "it will be better if you also provide us your email address"
+
+            my_group = Group.objects.get(name='Teacher')
+            my_group.user_set.add(user)
+            user.is_staff = True
+            user.save()
+
+            x = get_tokens_for_user(user)
+            x["msg"] = "otp verififed, Account actiuated"
+            x['mail'] = mail_otp
+            return Response(x, status=status.HTTP_202_ACCEPTED)
+        x = {"msg": "OTP incorrect"}
         return Response(x, status=status.HTTP_200_OK)
 
 
@@ -259,6 +356,7 @@ def activate_account(request, uidb64, token, typ):
     else:
         return HttpResponse('Activation link is invalid!', status=status.HTTP_200_OK)
 
+
 """
 class TestingView(generics.ListCreateAPIView):
     permission_classes = []
@@ -278,13 +376,13 @@ class TestingView(generics.ListCreateAPIView):
         return Response("dsds")
 """
 
+
 class TestingView(APIView):
     permission_classes = []
 
     def post(self, request):
         data = self.request.data
-        x =VideoMaterial.objects.filter(standard_link=data['standard_link'],subject_link=data['subject_link'],
-                                        chapter=data['chapter'])
-        serializer = TestingModelSerializer(x,many=True)
+        x = VideoMaterial.objects.filter(standard_link=data['standard_link'], subject_link=data['subject_link'],
+                                         chapter=data['chapter'])
+        serializer = TestingModelSerializer(x, many=True)
         return Response(serializer.data)
-

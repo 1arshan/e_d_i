@@ -29,7 +29,7 @@ class Class(models.Model):
     code = models.CharField(max_length=10, unique=True)
     standard_or_class = models.CharField(max_length=10, default="null")
     # = models.CharField(max_length=30)
-    teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.DO_NOTHING)
+    teacher_link = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE)
     institute_link = models.ForeignKey(Institute, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank=True)
     name = models.CharField(max_length=20)
@@ -108,18 +108,18 @@ class QuestionBank(models.Model):
 
 class StudentTest(models.Model):
     type = models.CharField(max_length=10)
-    student_link = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    student_link = models.ForeignKey(User, on_delete=models.CASCADE)
     total_mark = models.CharField(max_length=5)
     mark_score = models.CharField(max_length=5)
     date = models.DateTimeField()
-    class_link = models.ForeignKey(Class, on_delete=models.DO_NOTHING, blank=True, null=True)
+    class_link = models.ForeignKey(Class, on_delete=models.CASCADE, blank=True, null=True)
     visibility = models.BooleanField(default=False)
 
 
 class StudentTestData(models.Model):
     ques_pk = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, related_name='pk_ques')
     option_selected = models.CharField(max_length=2)
-    student_test_link = models.ForeignKey(StudentTest, on_delete=models.DO_NOTHING, related_name='student_link_test',
+    student_test_link = models.ForeignKey(StudentTest, on_delete=models.CASCADE, related_name='student_link_test',
                                           blank=True)
 
 

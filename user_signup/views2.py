@@ -77,7 +77,8 @@ class PasswordResetView(APIView):
 
 
 # reset password otp send verification  username,otp,type
-class PasswordResetOtpVerifyView(APIView):
+# commenting temposry for firebase authentication
+"""class PasswordResetOtpVerifyView(APIView):
     permission_classes = []
 
     def post(self, request):
@@ -99,6 +100,40 @@ class PasswordResetOtpVerifyView(APIView):
             else:
                 diff = datetime.now(timezone.utc) - t.teacherprofile.date
                 if data['otp'] == t.teacherprofile.otp and diff.seconds < 60:
+                    x = get_tokens_for_user(t)
+                    x["msg"] = "Otp is correct"
+                    return Response(x, status=status.HTTP_200_OK)
+                else:
+                    x = {'msg': "either otp provided is wrong or it expires"}
+                    return Response(x, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist or Exception:
+            x = {'msg': "either otp provided is wrong or it expires"}
+            return Response(x, status=status.HTTP_200_OK)
+"""
+
+
+# Temporary-----
+class PasswordResetOtpVerifyView(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        data = request.data
+        try:
+            t = User.objects.get(Q(username=data['username']))
+
+            if data['type'] == 's':
+
+                if data['verification']:
+                    x = get_tokens_for_user(t)
+                    x["msg"] = "Otp is correct"
+                    return Response(x, status=status.HTTP_200_OK)
+                else:
+                    x = {'msg': "either otp provided is wrong or it expires"}
+                    return Response(x, status=status.HTTP_200_OK)
+
+            else:
+
+                if data['verification']:
                     x = get_tokens_for_user(t)
                     x["msg"] = "Otp is correct"
                     return Response(x, status=status.HTTP_200_OK)
@@ -167,7 +202,7 @@ class PasswordVerificationView(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = account_activation_token.make_token(user)
             current_site = get_current_site(request)
-            #print(current_site.domain)
+            # print(current_site.domain)
             link = current_site.domain + '/user/change/credential/' + \
                    uid + '/' + token + '/' + typ + "/"
             x = {'otl': link,
@@ -249,22 +284,23 @@ class EmailVerificationView(APIView):
 
 class OtpLoginView(APIView):
     permission_classes = []
-    def get(self, request, ph_no,typ):
+
+    def get(self, request, ph_no, typ):
         try:
 
-            if typ =='s':
+            if typ == 's':
                 data = StudentProfile.objects.get(phone_number=ph_no)
             else:
                 data = TeacherProfile.objects.get(phone_number=ph_no)
 
-            data.date =random.randrange(10101, 909090)
+            data.date = random.randrange(10101, 909090)
             data.save()
             x = {"msg": "otp send"}
             return Response(x, status=status.HTTP_202_ACCEPTED)
-        except Exception :
+        except Exception:
             raise ObjectDoesNotExist
 
-    def post(self, request, ph_no,typ):
+    def post(self, request, ph_no, typ):
         data_receive = request.data
         try:
 
@@ -275,8 +311,8 @@ class OtpLoginView(APIView):
 
             diff = datetime.now(timezone.utc) - data.date
             if diff.seconds > 50:
-                if data.otp ==data_receive['otp']:
-                    user =User.objects.get(username=ph_no)
+                if data.otp == data_receive['otp']:
+                    user = User.objects.get(username=ph_no)
                     x = get_tokens_for_user(user)
                     return Response(x, status=status.HTTP_202_ACCEPTED)
                 else:
@@ -288,4 +324,3 @@ class OtpLoginView(APIView):
 
         except Exception:
             raise ObjectDoesNotExist
-

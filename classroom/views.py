@@ -16,7 +16,7 @@ from rest_framework.permissions import BasePermission
 # ----------get,post,put,patch of institute-------->>>>>>>>
 # ----------to Do remove admin_link
 
-class InstituteView(generics.ListCreateAPIView, generics.UpdateAPIView):
+class InstituteView(generics.ListCreateAPIView, generics.UpdateAPIView,generics.DestroyAPIView):
     serializer_class = InstituteSerializer
 
     def get_queryset(self):
@@ -54,6 +54,16 @@ class InstituteView(generics.ListCreateAPIView, generics.UpdateAPIView):
             x = {"msg": "institute info updated"}
             return Response(x, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        username = self.request.user.username
+        pk = self.request.GET['pk']
+        try:
+            t = Institute.objects.get(pk=pk, instituteteacher__teacher_link=username,
+                                      instituteteacher__administrative_right=True)
+            t.delete()
+        except Exception:
+            raise PermissionError
 
 
 # -- managing teacher of a institute for admin or who have administrative right
