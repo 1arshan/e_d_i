@@ -53,5 +53,8 @@ urlpatterns = [
     path('test/result/post/', views3.MockTestResultPostView.as_view()),# post their result
     path('classtest/s/', views3.ClassTestStudentView.as_view()),# kitne test student ke due hai
 
+    #---For all ----to see chapter in question bank-->>>
+    path('questionbank/chapter/', views3.QuestionBankChapterView.as_view(), name='ques_chap'),# chapter in the ques.
+
 ]
 

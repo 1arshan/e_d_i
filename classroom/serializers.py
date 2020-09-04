@@ -162,7 +162,7 @@ class ClassTestGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ClassTest
-        fields = ['class_link', 'class_link_test',  'mark_per_ques', 'negative_marking', 'starting_time',
+        fields = ['class_link', 'class_link_test', 'mark_per_ques', 'negative_marking', 'starting_time',
                   'ending_time', 'pk', 'visibility']
 
 
@@ -205,3 +205,10 @@ class TeacherResultClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentTest
         fields = ['total_mark', 'mark_score', 'id', 'student_link']
+
+
+# ---just to see different chapter
+class QuestionBankChapterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionBank
+        fields = ['chapter']

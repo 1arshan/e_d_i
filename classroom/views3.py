@@ -1,7 +1,7 @@
 from .models import QuestionBank, StudentTest, ClassTest, Class, StudentAttach
 from .serializers import QuestionBankSerializer, StudentResultGetSerializer, ClassTestSerializer, \
     StudentResultPostSerializer, ClassTestStudentSerializer, ClassTestGetSerializer, \
-    TeacherResultHomepageSerializer, TeacherResultClassSerializer
+    TeacherResultHomepageSerializer, TeacherResultClassSerializer, QuestionBankChapterSerializer
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -82,7 +82,8 @@ class QuestionBankView(generics.ListCreateAPIView, generics.UpdateAPIView, gener
         x = {"msg": "Question Deleted"}
         return Response(x, status=status.HTTP_201_CREATED)
 
-#-----private question of a teacher----
+
+# -----private question of a teacher----
 class QuestionBankPrivateView(generics.ListAPIView):
     serializer_class = QuestionBankSerializer
 
@@ -227,7 +228,8 @@ class Perm3(BasePermission):
         except Exception:
             raise PermissionError
 
-#---studetn to see test queque in the class
+
+# ---studetn to see test queque in the class
 class ClassTestStudentView(generics.ListAPIView):
     serializer_class = ClassTestStudentSerializer
     permission_classes = [IsAuthenticated, Perm3]
@@ -266,7 +268,8 @@ class ClassTestResultHomeTeacherView(generics.ListAPIView):
         class_link = self.request.GET['class_link']
         return StudentTest.objects.filter(class_link=class_link).distinct('date')
 
-#----after homepage-----
+
+# ----after homepage-----
 class ClassTestResultTestTeacherView(generics.ListAPIView):
     serializer_class = TeacherResultClassSerializer
     permission_classes = [IsAuthenticated, Perm4]
@@ -277,7 +280,8 @@ class ClassTestResultTestTeacherView(generics.ListAPIView):
         class_link = self.request.GET['class_link']
         return StudentTest.objects.filter(class_link=class_link, date=date)
 
-#---specfic student,class,test--->>>>>
+
+# ---specfic student,class,test--->>>>>
 class ClassTestResultSpecificTeacherView(generics.ListAPIView):
     serializer_class = StudentResultGetSerializer
     permission_classes = [IsAuthenticated, Perm4]
@@ -285,3 +289,13 @@ class ClassTestResultSpecificTeacherView(generics.ListAPIView):
     def get_queryset(self):
         pk = self.request.GET['pk']
         return StudentTest.objects.filter(pk=pk)
+
+
+# ---For all ---to seee chapter in the question bank
+class QuestionBankChapterView(generics.ListAPIView):
+    serializer_class = QuestionBankChapterSerializer
+
+    def get_queryset(self):
+        class_link = self.request.GET['class_link']
+        subject_link = self.request.GET['subject_link']
+        return QuestionBank.objects.filter(subject_link=subject_link, class_link=class_link).distinct('chapter')
