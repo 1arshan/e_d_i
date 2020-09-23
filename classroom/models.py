@@ -94,7 +94,7 @@ class QuestionBank(models.Model):
     subject_link = models.ForeignKey(Subject, on_delete=models.CASCADE, to_field='subject_name')
     chapter = models.CharField(max_length=30)
     question = models.TextField()
-    option = ArrayField(models.CharField(max_length=20, blank=True), blank=True)
+    option = ArrayField(models.CharField(max_length=100, blank=True), blank=True)
     answer = models.CharField(max_length=2)
     ques_photo = models.ImageField(blank=True, upload_to=renaming_uploaded_file3)
     ans_photo = models.ImageField(blank=True, upload_to=renaming_uploaded_file4)
