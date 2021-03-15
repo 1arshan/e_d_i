@@ -168,10 +168,10 @@ USE_TZ = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-AWS_ACCESS_KEY_ID = 'AKIA5VSMNQXEDXCBGXPD'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIA4AIDRLJOXBNCNNU6'
+AWS_SECRET_ACCESS_KEY = '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'
 
-AWS_STORAGE_BUCKET_NAME = 'edifi-server5-bucket'
+AWS_STORAGE_BUCKET_NAME = 'edifi-server6-bucket'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
@@ -182,5 +182,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'adcbackend/static'),
 ]
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+AWS_DEFAULT_ACL = None
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 DEFAULT_FILE_STORAGE = 'adcbackend.storage_backends.MediaStorage'

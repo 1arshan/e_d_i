@@ -11,11 +11,22 @@ class DatabaseSecretLocal:
     engine = 'django.db.backends.postgresql_psycopg2'
 
 
+"""
 class DatabaseSecretCloud:
     name = 'test1'
     user = 'arshan'
     password = 'nomansland'
     host = 'edifi-server-db.chvkllrtnsw8.ap-south-1.rds.amazonaws.com'
+    port = '5432'
+    engine = 'django.db.backends.postgresql_psycopg2'
+"""
+
+
+class DatabaseSecretCloud:
+    name = 'test1'
+    user = 'arshan'
+    password = 'nomansland'
+    host = 'edifi-server-db.c5tuhbzowmw5.ap-south-1.rds.amazonaws.com'
     port = '5432'
     engine = 'django.db.backends.postgresql_psycopg2'
 
@@ -32,8 +43,9 @@ class EmailToken:
 
 
 class Cloud:
-    allowed_host = ['ec2-15-206-67-239.ap-south-1.compute.amazonaws.com','ec2-15-206-153-238.ap-south-1.compute.amazonaws.com', 'localhost', '127.0.0.1']
+    allowed_host = ['ec2-15-206-67-239.ap-south-1.compute.amazonaws.com',
+                    'ec2-15-206-153-238.ap-south-1.compute.amazonaws.com', 'localhost', '127.0.0.1']
+
 
 class Jwt:
     signing_key = "h77qfnbmydu9=f0k0o4=$u3&$3lkbhs-oxkpf#@ee6_!l)@ku7"
-                                                                                       
